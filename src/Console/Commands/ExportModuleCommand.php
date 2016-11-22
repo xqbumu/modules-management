@@ -67,10 +67,10 @@ class ExportModuleCommand extends Command
 
         $moduleVendorPath = get_base_folder(array_get($module, 'file'));
 
-        $relativePath = str_replace(base_path('vendor/sgsoft-studio/base/src/'), '', $moduleVendorPath);
+        $relativePath = str_replace(base_path('vendor/sgsoft-studio/'), '', $moduleVendorPath);
 
         try {
-            $this->files->makeDirectory(webed_base_path($relativePath));
+            $this->files->makeDirectory(webed_base_path($relativePath), 755, false, true);
             $this->files->copyDirectory($moduleVendorPath, webed_base_path($relativePath), null);
 
             \ModulesManagement::setModules(get_all_module_information())
