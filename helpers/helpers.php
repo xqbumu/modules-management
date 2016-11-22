@@ -28,7 +28,7 @@ if (!function_exists('get_base_vendor_modules_information')) {
      */
     function get_base_vendor_modules_information()
     {
-        $modules = get_folders_in_path(base_path('vendor/sgsoft-studio/base/src'));
+        $modules = get_folders_in_path(base_path('vendor/sgsoft-studio'));
         $modulesArr = [];
         foreach ($modules as $row) {
             $file = $row . '/module.json';
