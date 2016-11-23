@@ -29,47 +29,33 @@ class ConsoleServiceProvider extends ServiceProvider
 
     private function generatorCommands()
     {
-        $generators = [
-            'webed.console.generator.make-module' => \WebEd\Base\ModulesManagement\Console\Generators\MakeModule::class,
-            'webed.console.generator.make-provider' => \WebEd\Base\ModulesManagement\Console\Generators\MakeProvider::class,
-            'webed.console.generator.make-controller' => \WebEd\Base\ModulesManagement\Console\Generators\MakeController::class,
-            'webed.console.generator.make-middleware' => \WebEd\Base\ModulesManagement\Console\Generators\MakeMiddleware::class,
-            'webed.console.generator.make-request' => \WebEd\Base\ModulesManagement\Console\Generators\MakeRequest::class,
-            'webed.console.generator.make-model' => \WebEd\Base\ModulesManagement\Console\Generators\MakeModel::class,
-            'webed.console.generator.make-repository' => \WebEd\Base\ModulesManagement\Console\Generators\MakeRepository::class,
-            'webed.console.generator.make-facade' => \WebEd\Base\ModulesManagement\Console\Generators\MakeFacade::class,
-            'webed.console.generator.make-service' => \WebEd\Base\ModulesManagement\Console\Generators\MakeService::class,
-            'webed.console.generator.make-support' => \WebEd\Base\ModulesManagement\Console\Generators\MakeSupport::class,
-            'webed.console.generator.make-view' => \WebEd\Base\ModulesManagement\Console\Generators\MakeView::class,
-            'webed.console.generator.make-migration' => \WebEd\Base\ModulesManagement\Console\Generators\MakeMigration::class,
-            'webed.console.generator.make-command' => \WebEd\Base\ModulesManagement\Console\Generators\MakeCommand::class,
-        ];
-        foreach ($generators as $slug => $class) {
-            $this->app->singleton($slug, function ($app) use ($slug, $class) {
-                return $app[$class];
-            });
-
-            $this->commands($slug);
-        }
+        $this->commands([
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeModule::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeProvider::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeController::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeMiddleware::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeRequest::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeModel::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeRepository::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeFacade::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeService::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeSupport::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeView::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeMigration::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeCommand::class,
+        ]);
     }
 
     private function otherCommands()
     {
-        $commands = [
-            'webed.console.command.cms-install' => \WebEd\Base\ModulesManagement\Console\Commands\InstallCmsCommand::class,
-            'webed.console.command.module-install' => \WebEd\Base\ModulesManagement\Console\Commands\InstallModuleCommand::class,
-            'webed.console.command.module-uninstall' => \WebEd\Base\ModulesManagement\Console\Commands\UninstallModuleCommand::class,
-            'webed.console.command.disable-module' => \WebEd\Base\ModulesManagement\Console\Commands\DisableModuleCommand::class,
-            'webed.console.command.enable-module' => \WebEd\Base\ModulesManagement\Console\Commands\EnableModuleCommand::class,
-            'webed.console.command.export-module' => \WebEd\Base\ModulesManagement\Console\Commands\ExportModuleCommand::class,
-            'webed.console.command.get-modules-information' => \WebEd\Base\ModulesManagement\Console\Commands\GetAllModulesCommand::class,
-        ];
-        foreach ($commands as $slug => $class) {
-            $this->app->singleton($slug, function ($app) use ($slug, $class) {
-                return $app[$class];
-            });
-
-            $this->commands($slug);
-        }
+        $this->commands([
+            \WebEd\Base\ModulesManagement\Console\Commands\InstallCmsCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\InstallModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\UninstallModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\DisableModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\EnableModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\ExportModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\GetAllModulesCommand::class,
+        ]);
     }
 }

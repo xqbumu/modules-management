@@ -19,16 +19,24 @@ class RouteServiceProvider extends ServiceProvider
              * Admin routes
              */
             $router->group(['prefix' => $adminRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
-                $router->group(['prefix' => $moduleRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
+                $router->group(['prefix' => $moduleRoute, 'middleware' => 'has-role:super-admin'], function (Router $router) use ($adminRoute, $moduleRoute) {
                     $router->get('', function () {
                         return redirect(route('admin::core-modules.index.get'));
                     });
-                    $router->get('plugins', 'PluginsController@getIndex')->name('admin::plugins.index.get');
-                    $router->post('plugins', 'PluginsController@postListing')->name('admin::plugins.index.post');
+                    $router->get('plugins', 'PluginsController@getIndex')
+                        ->name('admin::plugins.index.get');
 
-                    $router->post('plugins/change-status/{module}/{status}', 'PluginsController@postChangeStatus')->name('admin::plugins.change-status.post');
-                    $router->post('plugins/install/{module}', 'PluginsController@postInstall')->name('admin::plugins.install.post');
-                    $router->post('plugins/uninstall/{module}', 'PluginsController@postUninstall')->name('admin::plugins.uninstall.post');
+                    $router->post('plugins', 'PluginsController@postListing')
+                        ->name('admin::plugins.index.post');
+
+                    $router->post('plugins/change-status/{module}/{status}', 'PluginsController@postChangeStatus')
+                        ->name('admin::plugins.change-status.post');
+
+                    $router->post('plugins/install/{module}', 'PluginsController@postInstall')
+                        ->name('admin::plugins.install.post');
+
+                    $router->post('plugins/uninstall/{module}', 'PluginsController@postUninstall')
+                        ->name('admin::plugins.uninstall.post');
                 });
             });
         });

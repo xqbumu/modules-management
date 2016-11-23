@@ -70,6 +70,14 @@ class InstallModuleCommand extends Command
             save_module_information($module, [
                 'installed' => true
             ]);
+            /**
+             * Publish assets
+             */
+            $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
+            \Artisan::call('vendor:publish', [
+                '--tag' => 'assets',
+                '--provider' => $moduleProvider
+            ]);
         } else {
             $this->line('Nothing to install');
         }

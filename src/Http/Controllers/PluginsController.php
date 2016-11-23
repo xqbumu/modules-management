@@ -1,19 +1,13 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\Controllers;
 
+use WebEd\Base\Core\Http\Controllers\BaseAdminController;
 use WebEd\Base\Core\Support\DataTable\DataTables;
 
-class PluginsController extends BaseModulesController
+class PluginsController extends BaseAdminController
 {
     protected $module = 'webed-modules-management';
 
     protected $dashboardMenuId = 'webed-plugins';
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->middleware('has-permission:view-modules');
-    }
 
     /**
      * Get index page
@@ -114,8 +108,6 @@ class PluginsController extends BaseModulesController
 
     public function postChangeStatus($module, $status)
     {
-        $this->middleware('has-permission:edit-modules');
-
         switch ((bool)$status) {
             case true:
                 return \ModulesManagement::enableModule($module)->refreshComposerAutoload();
@@ -128,8 +120,6 @@ class PluginsController extends BaseModulesController
 
     public function postInstall($alias)
     {
-        $this->middleware('has-permission:edit-modules');
-
         $module = get_module_information($alias);
 
         if(!$module) {
@@ -145,8 +135,6 @@ class PluginsController extends BaseModulesController
 
     public function postUninstall($alias)
     {
-        $this->middleware('has-permission:edit-modules');
-
         $module = get_module_information($alias);
 
         if(!$module) {
