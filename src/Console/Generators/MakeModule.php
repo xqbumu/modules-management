@@ -116,7 +116,7 @@ class MakeModule extends Command
         /**
          * Modify the module.json information
          */
-        \File::put($directory . '/module.json', json_encode_pretify($this->container));
+        \File::put($directory . '/module.json', json_encode_prettify($this->container));
     }
 
     private function makeModuleFolder()

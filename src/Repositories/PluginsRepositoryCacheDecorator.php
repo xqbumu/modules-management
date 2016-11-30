@@ -6,5 +6,12 @@ use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContrac
 
 class PluginsRepositoryCacheDecorator extends AbstractRepositoryCacheDecorator  implements PluginsRepositoryContract
 {
-
+    /**
+     * @param $alias
+     * @return mixed
+     */
+    public function getByAlias($alias)
+    {
+        return $this->beforeGet(__FUNCTION__, func_get_args());
+    }
 }

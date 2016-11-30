@@ -196,7 +196,7 @@ class ModulesManagement
         /**
          * Save file
          */
-        File::put(base_path('composer.json'), json_encode_pretify($composerContent));
+        File::put(base_path('composer.json'), json_encode_prettify($composerContent));
 
         return $this;
     }

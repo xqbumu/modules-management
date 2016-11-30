@@ -85,6 +85,10 @@ class InstallCmsCommand extends Command
         $this->line('Install module dependencies...');
         $this->registerInstallModuleService();
 
+        session()->flush();
+        session()->regenerate();
+        \Artisan::call('cache:clear');
+
         $this->info("\nWebEd installed. Current version is " . config('webed.version'));
     }
 

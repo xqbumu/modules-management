@@ -23,7 +23,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
                 'id' => 'webed-plugins',
                 'piority' => 1001,
                 'parent_id' => null,
-                'heading' => null,
+                'heading' => 'Extensions & themes',
                 'title' => 'Plugins',
                 'font_icon' => 'icon-paper-plane',
                 'link' => route('admin::plugins.index.get'),
