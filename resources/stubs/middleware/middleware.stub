@@ -14,7 +14,7 @@ class DummyClass
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
-     * @param  array|string $role
+     * @param  array|string $params
      * @return mixed
      */
     public function handle($request, Closure $next, ...$params)
