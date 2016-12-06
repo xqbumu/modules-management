@@ -9,22 +9,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function map(Router $router)
     {
-        $router->group(['namespace' => $this->namespace, 'middleware' => 'web'], function (Router $router) {
-
-            $adminRoute = config('webed.admin_route');
-
-            $moduleRoute = 'DummyAlias';
-
-            /**
-             * Admin routes
-             */
-            $router->group(['prefix' => $adminRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
-                $router->group(['prefix' => $moduleRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
-                    /**
-                     * Put some route here
-                     */
-                });
-            });
-        });
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
     }
 }
