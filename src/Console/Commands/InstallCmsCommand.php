@@ -199,16 +199,16 @@ class InstallCmsCommand extends Command
 
     protected function registerInstallModuleService()
     {
-        $modules = get_all_module_information();
+        $modules = get_modules_by_type('base');
         foreach ($modules as $module) {
             $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\InstallModuleServiceProvider');
             if(class_exists($namespace)) {
                 $this->app->register($namespace);
-                save_module_information($module, [
-                    'installed' => true
-                ]);
             }
         }
+        \Artisan::call('vendor:publish', [
+            '--tag' => 'webed-public-assets',
+        ]);
     }
 
     /**

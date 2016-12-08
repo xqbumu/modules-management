@@ -21,7 +21,7 @@ class ModuleProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/assets' => resource_path('assets'),
             __DIR__ . '/../../resources/public' => public_path(),
-        ], 'assets');
+        ], 'webed-assets');
         $this->publishes([
             __DIR__ . '/../../resources/views' => config('view.paths')[0] . '/vendor/DummyAlias',
         ], 'views');

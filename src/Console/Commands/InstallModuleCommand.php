@@ -76,7 +76,7 @@ class InstallModuleCommand extends Command
              */
             $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
             \Artisan::call('vendor:publish', [
-                '--tag' => 'assets',
+                '--tag' => 'webed-public-assets',
                 '--provider' => $moduleProvider
             ]);
         } else {

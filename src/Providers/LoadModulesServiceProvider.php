@@ -29,22 +29,22 @@ class LoadModulesServiceProvider extends ServiceProvider
     {
         $this->modules = collect(get_all_module_information());
 
-        if(!app()->runningInConsole()) {
-            foreach ($this->modules->where('type', '=', 'plugins') as $module) {
-                if (array_get($module, 'enabled', null) === true) {
-                    /**
-                     * Register module
-                     */
-                    $moduleProvider = $module['namespace'] . '\Providers\ModuleProvider';
+        foreach ($this->modules->where('type', '=', 'plugins') as $module) {
+            if (array_get($module, 'enabled', null) === true) {
+                /**
+                 * Register module
+                 */
+                $moduleProvider = $module['namespace'] . '\Providers\ModuleProvider';
 
-                    if (class_exists($moduleProvider)) {
-                        $this->app->register($moduleProvider);
-                    } else {
-                        $this->notLoadedModules[] = $moduleProvider;
-                    }
+                if (class_exists($moduleProvider)) {
+                    $this->app->register($moduleProvider);
+                } else {
+                    $this->notLoadedModules[] = $moduleProvider;
                 }
             }
+        }
 
+        if(!app()->runningInConsole()) {
             if ($this->notLoadedModules) {
                 foreach ($this->notLoadedModules as $key => $module) {
                     /**

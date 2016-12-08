@@ -8,14 +8,16 @@
 /**
  * Admin routes
  */
-$adminRoute = config('webed.admin_route');
+$router->group(['middleware' => 'web'], function (Router $router) {
+    $adminRoute = config('webed.admin_route');
 
-$moduleRoute = 'DummyAlias';
+    $moduleRoute = 'DummyAlias';
 
-$router->group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
-    /**
-     *
-     * Put some route here
-     *
-     */
+    $router->group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
+        /**
+         *
+         * Put some route here
+         *
+         */
+    });
 });
