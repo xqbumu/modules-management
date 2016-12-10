@@ -69,28 +69,32 @@ if (!function_exists('get_all_module_information')) {
                     continue;
                 }
 
-                if (\Schema::hasTable('plugins')) {
-                    if ($type === 'plugins') {
-                        $plugin = $pluginRepo->getByAlias(array_get($data, 'alias'));
-                        if (!$plugin) {
-                            $result = $pluginRepo
-                                ->editWithValidate(0, [
-                                    'alias' => array_get($data, 'alias'),
-                                    'enabled' => false,
-                                    'installed' => false,
-                                ], true, true);
-                            /**
-                             * Everything ok
-                             */
-                            if (!$result['error']) {
-                                $plugin = $result['data'];
-                            }
+                if (app()->runningInConsole()) {
+                    if (!check_db_connection() || !\Schema::hasTable('plugins')) {
+                        continue;
+                    }
+                }
+
+                if ($type === 'plugins') {
+                    $plugin = $pluginRepo->getByAlias(array_get($data, 'alias'));
+                    if (!$plugin) {
+                        $result = $pluginRepo
+                            ->editWithValidate(0, [
+                                'alias' => array_get($data, 'alias'),
+                                'enabled' => false,
+                                'installed' => false,
+                            ], true, true);
+                        /**
+                         * Everything ok
+                         */
+                        if (!$result['error']) {
+                            $plugin = $result['data'];
                         }
-                        if ($plugin) {
-                            $data['enabled'] = !!$plugin->enabled;
-                            $data['installed'] = !!$plugin->installed;
-                            $data['id'] = $plugin->id;
-                        }
+                    }
+                    if ($plugin) {
+                        $data['enabled'] = !!$plugin->enabled;
+                        $data['installed'] = !!$plugin->installed;
+                        $data['id'] = $plugin->id;
                     }
                 }
 

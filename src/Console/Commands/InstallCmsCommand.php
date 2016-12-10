@@ -104,14 +104,7 @@ class InstallCmsCommand extends Command
         $this->dbInfo['password'] = env('DB_PASSWORD');
         $this->dbInfo['port'] = env('DB_PORT');
 
-        $try = 0;
-
-        while (!$this->checkDatabaseConnection()) {
-            $try++;
-            if ($try > 1) {
-                $this->error('Wrong database information...');
-                $this->line('');
-            }
+        while (!check_db_connection()) {
 
             $this->info('Setup your database...');
 
@@ -128,11 +121,9 @@ class InstallCmsCommand extends Command
             }
             $this->line('');
 
-
             $this->dbInfo['port'] = $this->ask('Your database port', '3306');
             $this->line('');
-        }
-        if($try > 0) {
+
             $this->info('Saving database information to .env...');
 
             $contents = $this->getEnvFile();
@@ -145,6 +136,12 @@ class InstallCmsCommand extends Command
 
             // Write to .env
             $this->files->put('.env', $contents);
+
+            if (!check_db_connection()) {
+                $this->error('Can not connect to database, please try again!');
+            } else {
+                $this->info('Connect to database successfully!');
+            }
         }
 
         $this->info('Database OK...');
@@ -209,35 +206,6 @@ class InstallCmsCommand extends Command
         \Artisan::call('vendor:publish', [
             '--tag' => 'webed-public-assets',
         ]);
-    }
-
-    /**
-     * @return bool
-     */
-    protected function checkDatabaseConnection()
-    {
-        if(!$this->dbInfo['host'] || !$this->dbInfo['username'] || !$this->dbInfo['database']) {
-            return false;
-        }
-        try {
-            set_error_handler(function ($no, $str, $file, $line) {
-                throw new \ErrorException($str, $no, 0, $file, $line);
-            });
-            $con = @mysqli_connect(
-                $this->dbInfo['host'],
-                $this->dbInfo['username'],
-                $this->dbInfo['password'],
-                $this->dbInfo['database']
-            );
-            if (!$con || @mysqli_connect_errno()) {
-                return false;
-            }
-            return true;
-        } catch (\PDOException $ex) {
-            return false;
-        } catch (\Exception $ex) {
-            return false;
-        }
     }
 
     /**
