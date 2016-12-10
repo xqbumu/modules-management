@@ -28,6 +28,9 @@ class ModuleProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../config' => base_path('config'),
         ], 'config');
+        $this->publishes([
+            __DIR__ . '/../../resources/themes' => base_path(),
+        ], 'public-assets');
     }
 
     /**

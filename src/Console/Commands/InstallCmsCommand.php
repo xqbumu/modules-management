@@ -67,12 +67,14 @@ class InstallCmsCommand extends Command
      */
     public function handle()
     {
+        $this->createEnv();
+
         $this->getDatabaseInformation();
         /**
          * Migrate tables
          */
         $this->line('Migrate database...');
-        if($this->option('refresh')) {
+        if ($this->option('refresh')) {
             \Artisan::call('migrate:refresh');
         } else {
             \Artisan::call('migrate');
@@ -104,44 +106,9 @@ class InstallCmsCommand extends Command
         $this->dbInfo['password'] = env('DB_PASSWORD');
         $this->dbInfo['port'] = env('DB_PORT');
 
-        while (!check_db_connection()) {
-
-            $this->info('Setup your database...');
-
-            $this->dbInfo['connection'] = $this->ask('Your database type', 'mysql');
-            $this->dbInfo['host'] = $this->ask('Your database host', 'localhost');
-            $this->dbInfo['database'] = $this->ask('Your database name', 'webed');
-            $this->dbInfo['username'] = $this->ask('Your database username', 'root');
-
-            $question = new Question('Your database password', false);
-            $question->setHidden(true)->setHiddenFallback(true);
-            $this->dbInfo['password'] = (new SymfonyQuestionHelper())->ask($this->input, $this->output, $question);
-            if ($this->dbInfo['password'] === false) {
-                $this->dbInfo['password'] = '';
-            }
-            $this->line('');
-
-            $this->dbInfo['port'] = $this->ask('Your database port', '3306');
-            $this->line('');
-
-            $this->info('Saving database information to .env...');
-
-            $contents = $this->getEnvFile();
-            $contents = preg_replace('/(' . preg_quote('DB_CONNECTION=') . ')(.*)/', 'DB_CONNECTION=' . $this->dbInfo['connection'], $contents);
-            $contents = preg_replace('/(' . preg_quote('DB_HOST=') . ')(.*)/', 'DB_HOST=' . $this->dbInfo['host'], $contents);
-            $contents = preg_replace('/(' . preg_quote('DB_DATABASE=') . ')(.*)/', 'DB_DATABASE=' . $this->dbInfo['database'], $contents);
-            $contents = preg_replace('/(' . preg_quote('DB_USERNAME=') . ')(.*)/', 'DB_USERNAME=' . $this->dbInfo['username'], $contents);
-            $contents = preg_replace('/(' . preg_quote('DB_PASSWORD=') . ')(.*)/', 'DB_PASSWORD=' . $this->dbInfo['password'], $contents);
-            $contents = preg_replace('/(' . preg_quote('DB_PORT=') . ')(.*)/', 'DB_PORT=' . $this->dbInfo['port'], $contents);
-
-            // Write to .env
-            $this->files->put('.env', $contents);
-
-            if (!check_db_connection()) {
-                $this->error('Can not connect to database, please try again!');
-            } else {
-                $this->info('Connect to database successfully!');
-            }
+        if (!check_db_connection()) {
+            $this->error('Please setup your database information first!');
+            die();
         }
 
         $this->info('Database OK...');
@@ -150,7 +117,7 @@ class InstallCmsCommand extends Command
     protected function createSuperAdminRole()
     {
         $role = EloquentRole::where('slug', '=', 'super-admin')->first();
-        if($role) {
+        if ($role) {
             $this->role = $role;
             $this->info('Role already exists...');
             return;
@@ -189,7 +156,7 @@ class InstallCmsCommand extends Command
         /**
          * Assign this user to super admin
          */
-        if($this->role) {
+        if ($this->role) {
             $this->role->users()->save($user);
         }
     }
@@ -199,7 +166,7 @@ class InstallCmsCommand extends Command
         $modules = get_modules_by_type('base');
         foreach ($modules as $module) {
             $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\InstallModuleServiceProvider');
-            if(class_exists($namespace)) {
+            if (class_exists($namespace)) {
                 $this->app->register($namespace);
             }
         }
@@ -211,8 +178,10 @@ class InstallCmsCommand extends Command
     /**
      * @return string
      */
-    protected function getEnvFile()
+    protected function createEnv()
     {
-        return $this->files->exists('.env') ? $this->files->get('.env') : $this->files->get('.env.example') ?: '';
+        $env = $this->files->exists('.env') ? $this->files->get('.env') : $this->files->get('.env.example') ?: '';
+        $this->files->put('.env', $env);
+        return $env;
     }
 }
