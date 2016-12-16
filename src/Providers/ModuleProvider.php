@@ -1,7 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use WebEd\Base\ModulesManagement\Support\Facades\ModulesManagementFacade;
+use WebEd\Base\ModulesManagement\Facades\ModulesManagementFacade;
 
 class ModuleProvider extends ServiceProvider
 {

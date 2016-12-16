@@ -158,3 +158,13 @@ if (!function_exists('save_module_information')) {
         return !array_get($result, 'error');
     }
 }
+
+if (!function_exists('modules_management')) {
+    /**
+     * @return \WebEd\Base\ModulesManagement\Support\ModulesManagement
+     */
+    function modules_management()
+    {
+        return \WebEd\Base\ModulesManagement\Facades\ModulesManagementFacade::getFacadeRoot();
+    }
+}

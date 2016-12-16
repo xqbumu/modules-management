@@ -73,10 +73,10 @@ class ExportModuleCommand extends Command
             $this->files->makeDirectory(webed_base_path($relativePath), 755, false, true);
             $this->files->copyDirectory($moduleVendorPath, webed_base_path($relativePath), null);
 
-            \ModulesManagement::setModules(collect(get_all_module_information()))
+            modules_management()->setModules(collect(get_all_module_information()))
                 ->enableModule(array_get($module, 'alias'));
 
-            \ModulesManagement::refreshComposerAutoload();
+            modules_management()->refreshComposerAutoload();
 
             $this->info("Module exported successfully.");
         } catch (\Exception $exception) {

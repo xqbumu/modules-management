@@ -1,4 +1,4 @@
-<?php namespace WebEd\Base\ModulesManagement\Support\Facades;
+<?php namespace WebEd\Base\ModulesManagement\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

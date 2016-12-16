@@ -55,20 +55,20 @@ class EnableModuleCommand extends Command
 
         if(!$this->container['alias']) {
             foreach ($plugins as $plugin) {
-                \ModulesManagement::enableModule(array_get($plugin, 'alias'));
+                modules_management()->enableModule(array_get($plugin, 'alias'));
                 $count++;
             }
         } else {
             $plugins = $plugins->where('alias', '=', $this->container['alias']);
             foreach ($plugins as $plugin) {
-                \ModulesManagement::enableModule(array_get($plugin, 'alias'));
+                modules_management()->enableModule(array_get($plugin, 'alias'));
                 $count++;
             }
         }
 
         echo PHP_EOL;
 
-        \ModulesManagement::refreshComposerAutoload();
+        modules_management()->refreshComposerAutoload();
 
         $this->info("\n$count module(s) enabled successfully.");
     }

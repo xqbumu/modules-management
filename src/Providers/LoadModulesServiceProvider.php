@@ -62,6 +62,6 @@ class LoadModulesServiceProvider extends ServiceProvider
             }
         }
 
-        \ModulesManagement::setModules($this->modules);
+        modules_management()->setModules($this->modules);
     }
 }

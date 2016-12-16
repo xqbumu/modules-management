@@ -56,20 +56,20 @@ class DisableModuleCommand extends Command
 
         if(!$this->container['alias']) {
             foreach ($plugins as $plugin) {
-                \ModulesManagement::disableModule(array_get($plugin, 'alias'));
+                modules_management()->disableModule(array_get($plugin, 'alias'));
                 $count++;
             }
         } else {
             $plugins = $plugins->where('alias', '=', $this->container['alias']);
             foreach ($plugins as $plugin) {
-                \ModulesManagement::disableModule(array_get($plugin, 'alias'));
+                modules_management()->disableModule(array_get($plugin, 'alias'));
                 $count++;
             }
         }
 
         echo PHP_EOL;
 
-        \ModulesManagement::refreshComposerAutoload();
+        modules_management()->refreshComposerAutoload();
 
         $this->info("\n$count module(s) disabled successfully.");
     }

@@ -59,7 +59,7 @@ class PluginsController extends BaseAdminController
      */
     public function postListing(DataTables $dataTable)
     {
-        $modules = \ModulesManagement::export('plugins');
+        $modules = modules_management()->export('plugins');
 
         $data = $dataTable
             ->of($modules->values())
@@ -122,10 +122,10 @@ class PluginsController extends BaseAdminController
     {
         switch ((bool)$status) {
             case true:
-                return \ModulesManagement::enableModule($module)->refreshComposerAutoload();
+                return modules_management()->enableModule($module)->refreshComposerAutoload();
                 break;
             default:
-                return \ModulesManagement::disableModule($module)->refreshComposerAutoload();
+                return modules_management()->disableModule($module)->refreshComposerAutoload();
                 break;
         }
     }
