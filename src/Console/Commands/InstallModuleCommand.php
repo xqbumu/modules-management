@@ -65,22 +65,22 @@ class InstallModuleCommand extends Command
     {
         $module = get_module_information($this->argument('alias'));
         $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\InstallModuleServiceProvider');
-        if(class_exists($namespace)) {
+        if (class_exists($namespace)) {
             $this->app->register($namespace);
-            save_module_information($module, [
-                'installed' => true,
-                'installed_version' => array_get($module, 'version'),
-            ]);
-            /**
-             * Publish assets
-             */
-            $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
-            \Artisan::call('vendor:publish', [
-                '--tag' => 'webed-public-assets',
-                '--provider' => $moduleProvider
-            ]);
-        } else {
-            $this->line('Nothing to install');
+
         }
+        /**
+         * Publish assets
+         */
+        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
+        \Artisan::call('vendor:publish', [
+            '--tag' => 'webed-public-assets',
+            '--provider' => $moduleProvider
+        ]);
+        save_module_information($module, [
+            'installed' => true,
+            'installed_version' => array_get($module, 'version'),
+        ]);
+        $this->line('Installed');
     }
 }
