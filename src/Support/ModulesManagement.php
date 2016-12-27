@@ -10,9 +10,9 @@ use Illuminate\Support\Composer;
 class ModulesManagement
 {
     /**
-     * @var Collection
+     * @var Collection|array
      */
-    protected $modules = [];
+    protected $modules;
 
     protected $composer;
 
@@ -20,17 +20,8 @@ class ModulesManagement
     {
         $this->composer = $composer;
         $this->composer->setWorkingPath(base_path());
-    }
 
-    /**
-     * @param Collection $modules
-     * @return $this
-     */
-    public function setModules(Collection $modules)
-    {
-        $this->modules = $modules;
-
-        return $this;
+        $this->modules = collect(get_all_module_information());
     }
 
     /**
@@ -129,6 +120,28 @@ class ModulesManagement
     }
 
     /**
+     * Determine when module is installed
+     * @param string $moduleName
+     * @param \Closure|null $trueCallback
+     * @param \Closure|null $falseCallback
+     * @return bool
+     */
+    public function isInstalled($moduleName, Closure $trueCallback = null, Closure $falseCallback = null)
+    {
+        $module = $this->getModule($moduleName);
+        if ($module && isset($module['installed']) && $module['installed']) {
+            if ($trueCallback) {
+                call_user_func($trueCallback);
+            }
+            return true;
+        }
+        if ($falseCallback) {
+            call_user_func($falseCallback);
+        }
+        return false;
+    }
+
+    /**
      * @param string $type
      * @param null|int $page
      * @param int $perPage
@@ -210,5 +223,13 @@ class ModulesManagement
         $result = response_with_messages('Composer autoload refreshed');
 
         return $result;
+    }
+
+    /**
+     * @return array|Collection
+     */
+    public function getAllModulesInformation()
+    {
+        return $this->modules;
     }
 }

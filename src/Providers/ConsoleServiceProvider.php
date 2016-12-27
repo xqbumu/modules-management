@@ -43,6 +43,7 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Generators\MakeView::class,
             \WebEd\Base\ModulesManagement\Console\Generators\MakeMigration::class,
             \WebEd\Base\ModulesManagement\Console\Generators\MakeCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeDataTable::class,
         ]);
     }
 

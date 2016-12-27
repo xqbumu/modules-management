@@ -5,12 +5,6 @@ use File;
 
 class LoadModulesServiceProvider extends ServiceProvider
 {
-    /**
-     * Modules information
-     * @var array
-     */
-    protected $modules = [];
-
     protected $notLoadedModules = [];
 
     public function register()
@@ -27,9 +21,7 @@ class LoadModulesServiceProvider extends ServiceProvider
 
     private function booted()
     {
-        $this->modules = collect(get_all_module_information());
-
-        foreach ($this->modules->where('type', '=', 'plugins') as $module) {
+        foreach (modules_management()->getAllModulesInformation()->where('type', '=', 'plugins') as $module) {
             if (array_get($module, 'enabled', null) === true) {
                 /**
                  * Register module
@@ -61,7 +53,5 @@ class LoadModulesServiceProvider extends ServiceProvider
                 }
             }
         }
-
-        modules_management()->setModules($this->modules);
     }
 }

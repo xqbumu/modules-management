@@ -73,8 +73,7 @@ class ExportModuleCommand extends Command
             $this->files->makeDirectory(webed_base_path($relativePath), 755, false, true);
             $this->files->copyDirectory($moduleVendorPath, webed_base_path($relativePath), null);
 
-            modules_management()->setModules(collect(get_all_module_information()))
-                ->enableModule(array_get($module, 'alias'));
+            modules_management()->enableModule(array_get($module, 'alias'));
 
             modules_management()->refreshComposerAutoload();
 

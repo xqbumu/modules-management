@@ -22,6 +22,16 @@ if (!function_exists('webed_base_path')) {
     }
 }
 
+if (!function_exists('modules_management')) {
+    /**
+     * @return \WebEd\Base\ModulesManagement\Support\ModulesManagement
+     */
+    function modules_management()
+    {
+        return \WebEd\Base\ModulesManagement\Facades\ModulesManagementFacade::getFacadeRoot();
+    }
+}
+
 if (!function_exists('get_base_vendor_modules_information')) {
     /**
      * @return array
@@ -115,7 +125,7 @@ if (!function_exists('get_module_information')) {
      */
     function get_module_information($alias)
     {
-        return collect(get_all_module_information())
+        return modules_management()->getAllModulesInformation()
             ->where('alias', '=', $alias)
             ->first();
     }
@@ -128,7 +138,7 @@ if (!function_exists('get_modules_by_type')) {
      */
     function get_modules_by_type($type)
     {
-        return collect(get_all_module_information())
+        return modules_management()->getAllModulesInformation()
             ->where('type', '=', $type);
     }
 }
@@ -156,15 +166,5 @@ if (!function_exists('save_module_information')) {
             ]), true, true);
 
         return !array_get($result, 'error');
-    }
-}
-
-if (!function_exists('modules_management')) {
-    /**
-     * @return \WebEd\Base\ModulesManagement\Support\ModulesManagement
-     */
-    function modules_management()
-    {
-        return \WebEd\Base\ModulesManagement\Facades\ModulesManagementFacade::getFacadeRoot();
     }
 }
