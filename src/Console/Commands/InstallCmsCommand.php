@@ -4,8 +4,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Question\Question;
 use Illuminate\Filesystem\Filesystem;
-use WebEd\Base\ACL\Models\EloquentRole;
-use WebEd\Base\Users\Models\EloquentUser;
+use WebEd\Base\ACL\Models\Role;
+use WebEd\Base\Users\Models\User;
 
 class InstallCmsCommand extends Command
 {
@@ -39,7 +39,7 @@ class InstallCmsCommand extends Command
     protected $dbInfo = [];
 
     /**
-     * @var EloquentRole
+     * @var Role
      */
     protected $role;
 
@@ -116,14 +116,14 @@ class InstallCmsCommand extends Command
 
     protected function createSuperAdminRole()
     {
-        $role = EloquentRole::where('slug', '=', 'super-admin')->first();
+        $role = Role::where('slug', '=', 'super-admin')->first();
         if ($role) {
             $this->role = $role;
             $this->info('Role already exists...');
             return;
         }
 
-        $role = new EloquentRole();
+        $role = new Role();
         $role->name = 'Super Admin';
         $role->slug = 'super-admin';
 
@@ -138,7 +138,7 @@ class InstallCmsCommand extends Command
 
     protected function createAdminUser()
     {
-        $user = new EloquentUser();
+        $user = new User();
         $user->username = $this->ask('Your username', 'admin');
         $user->email = $this->ask('Your email', 'admin@webed.com');
         $user->password = $this->secret('Your password');

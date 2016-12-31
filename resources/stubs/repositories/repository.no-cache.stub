@@ -2,7 +2,7 @@
 
 use WebEd\Base\Core\Repositories\AbstractBaseRepository;
 
-use DummyNamespace\Contracts\RoleContract;
+use DummyNamespace\Contracts\RoleRepositoryContract;
 
 class DummyClass extends AbstractBaseRepository implements DummyClassContract
 {
