@@ -21,7 +21,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
         app()->booted(function () {
             \DashboardMenu::registerItem([
                 'id' => 'webed-plugins',
-                'piority' => 1001,
+                'priority' => 1001,
                 'parent_id' => null,
                 'heading' => 'Extensions & themes',
                 'title' => 'Plugins',
