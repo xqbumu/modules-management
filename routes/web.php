@@ -18,10 +18,12 @@ $router->group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router 
         return redirect(route('admin::core-modules.index.get'));
     });
     $router->get('plugins', 'PluginsController@getIndex')
-        ->name('admin::plugins.index.get');
+        ->name('admin::plugins.index.get')
+        ->middleware('has-permission:view-plugins');
 
     $router->post('plugins', 'PluginsController@postListing')
-        ->name('admin::plugins.index.post');
+        ->name('admin::plugins.index.post')
+        ->middleware('has-permission:view-plugins');
 
     $router->post('plugins/change-status/{module}/{status}', 'PluginsController@postChangeStatus')
         ->name('admin::plugins.change-status.post')

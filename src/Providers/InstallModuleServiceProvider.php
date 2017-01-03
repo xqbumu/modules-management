@@ -30,13 +30,7 @@ class InstallModuleServiceProvider extends ServiceProvider
 
     private function booted()
     {
-        /**
-         * Now, just super admin can modify plugins
-         */
-        /*acl_permission()
-            ->registerPermission('Manage modules', 'view-modules', $this->module)
-            ->registerPermission('Add module', 'add-modules', $this->module)
-            ->registerPermission('Edit module', 'edit-modules', $this->module)
-            ->registerPermission('Remove module', 'remove-modules', $this->module);*/
+        acl_permission()
+            ->registerPermission('Manage plugins', 'view-plugins', $this->module);
     }
 }

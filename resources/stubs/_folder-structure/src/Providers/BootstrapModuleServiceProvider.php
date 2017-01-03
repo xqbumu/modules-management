@@ -42,6 +42,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             'font_icon' => 'icon-puzzle',
             'link' => '',
             'css_class' => null,
+            'permissions' => [],
         ]);*/
     }
 }

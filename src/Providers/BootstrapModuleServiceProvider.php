@@ -28,6 +28,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
                 'font_icon' => 'icon-paper-plane',
                 'link' => route('admin::plugins.index.get'),
                 'css_class' => null,
+                'permissions' => ['view-plugins'],
             ]);
         });
     }
