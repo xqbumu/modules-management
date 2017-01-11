@@ -14,13 +14,6 @@ class LoadModulesServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        app()->booted(function () {
-            $this->booted();
-        });
-    }
-
-    private function booted()
-    {
         foreach (modules_management()->getAllModulesInformation()->where('type', '=', 'plugins') as $module) {
             if (array_get($module, 'enabled', null) === true) {
                 /**
