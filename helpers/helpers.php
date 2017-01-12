@@ -64,12 +64,21 @@ if (!function_exists('get_all_module_information')) {
     {
         $modulesArr = [];
 
+        $canAccessDB = true;
+        if (app()->runningInConsole()) {
+            if (!check_db_connection() || !\Schema::hasTable('plugins')) {
+                $canAccessDB = false;
+            }
+        }
+
         /**
          * @var \WebEd\Base\ModulesManagement\Repositories\PluginsRepository $pluginRepo
          */
         $pluginRepo = app(\WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract::class);
 
-        $plugins = $pluginRepo->all();
+        if ($canAccessDB) {
+            $plugins = $pluginRepo->all();
+        }
 
         foreach (['base', 'plugins'] as $type) {
             $modules = get_folders_in_path(base_path($type));
@@ -81,10 +90,8 @@ if (!function_exists('get_all_module_information')) {
                     continue;
                 }
 
-                if (app()->runningInConsole()) {
-                    if (!check_db_connection() || !\Schema::hasTable('plugins')) {
-                        continue;
-                    }
+                if (!$canAccessDB) {
+                    continue;
                 }
 
                 if ($type === 'plugins') {
