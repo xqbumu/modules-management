@@ -69,6 +69,8 @@ if (!function_exists('get_all_module_information')) {
          */
         $pluginRepo = app(\WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract::class);
 
+        $plugins = $pluginRepo->all();
+
         foreach (['base', 'plugins'] as $type) {
             $modules = get_folders_in_path(base_path($type));
 
@@ -86,7 +88,8 @@ if (!function_exists('get_all_module_information')) {
                 }
 
                 if ($type === 'plugins') {
-                    $plugin = $pluginRepo->getByAlias(array_get($data, 'alias'));
+                    $plugin = $plugins->where('alias', '=', array_get($data, 'alias'))->first();
+
                     if (!$plugin) {
                         $result = $pluginRepo
                             ->editWithValidate(0, [
