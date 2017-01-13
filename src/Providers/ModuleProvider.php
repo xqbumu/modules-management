@@ -47,6 +47,7 @@ class ModuleProvider extends ServiceProvider
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(LoadModulesServiceProvider::class);
+        $this->app->register(HookServiceProvider::class);
         $this->app->register(BootstrapModuleServiceProvider::class);
 
         //Register related facades
