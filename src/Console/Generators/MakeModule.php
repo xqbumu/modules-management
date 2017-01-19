@@ -78,6 +78,7 @@ class MakeModule extends Command
         $this->container['namespace'] = $this->ask('Namespace of module:', 'WebEd\\' . $this->acceptedTypes[$this->moduleType] . '\\' . studly_case($this->container['alias']));
         $this->container['version'] = $this->ask('Module version.', '1.0');
         $this->container['autoload'] = $this->ask('Autoloading type.', 'psr-4');
+        $this->container['require'] = new \stdClass();
 
         $this->step2();
     }
