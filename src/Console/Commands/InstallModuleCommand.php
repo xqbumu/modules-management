@@ -50,20 +50,34 @@ class InstallModuleCommand extends Command
      */
     public function handle()
     {
+        $module = get_module_information($this->argument('alias'));
+
+        if (!$module) {
+            $this->error('Module not exists');
+            die();
+        }
+
+        if (array_get($module, 'installed') === true) {
+            $this->info("\nModule " . $this->argument('alias') . " installed.");
+            return;
+        }
+
+        $this->detectRequiredDependencies($module);
+
+        $this->registerInstallModuleService($module);
+
+        $this->info("\nModule " . $this->argument('alias') . " installed.");
+    }
+
+    protected function registerInstallModuleService($module)
+    {
         /**
          * Migrate tables
          */
         $this->line('Migrate database...');
         \Artisan::call('migrate');
         $this->line('Install module dependencies...');
-        $this->registerInstallModuleService();
 
-        $this->info("\nModule " . $this->argument('alias') . " installed.");
-    }
-
-    protected function registerInstallModuleService()
-    {
-        $module = get_module_information($this->argument('alias'));
         $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\InstallModuleServiceProvider');
         if (class_exists($namespace)) {
             $this->app->register($namespace);
@@ -82,5 +96,16 @@ class InstallModuleCommand extends Command
             'installed_version' => array_get($module, 'version'),
         ]);
         $this->line('Installed');
+    }
+
+    protected function detectRequiredDependencies($module)
+    {
+        $checkRelatedModules = check_module_require($module);
+        if ($checkRelatedModules['error']) {
+            foreach ($checkRelatedModules['messages'] as $message) {
+                $this->error($message);
+            }
+            die();
+        }
     }
 }

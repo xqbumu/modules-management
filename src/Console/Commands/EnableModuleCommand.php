@@ -55,12 +55,14 @@ class EnableModuleCommand extends Command
 
         if(!$this->container['alias']) {
             foreach ($plugins as $plugin) {
+                $this->detectRequiredDependencies($plugin);
                 modules_management()->enableModule(array_get($plugin, 'alias'));
                 $count++;
             }
         } else {
             $plugins = $plugins->where('alias', '=', $this->container['alias']);
             foreach ($plugins as $plugin) {
+                $this->detectRequiredDependencies($plugin);
                 modules_management()->enableModule(array_get($plugin, 'alias'));
                 $count++;
             }
@@ -79,6 +81,17 @@ class EnableModuleCommand extends Command
             $this->container['alias'] = null;
         } else {
             $this->container['alias'] = $this->ask('Plugin alias');
+        }
+    }
+
+    protected function detectRequiredDependencies($module)
+    {
+        $checkRelatedModules = check_module_require($module);
+        if ($checkRelatedModules['error']) {
+            foreach ($checkRelatedModules['messages'] as $message) {
+                $this->error($message);
+            }
+            die();
         }
     }
 }

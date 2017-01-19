@@ -112,6 +112,7 @@ if (!function_exists('get_all_module_information')) {
                             $data['enabled'] = !!$plugin->enabled;
                             $data['installed'] = !!$plugin->installed;
                             $data['id'] = $plugin->id;
+                            $data['installed_version'] = $plugin->installed_version;
                         }
                     }
                 }
