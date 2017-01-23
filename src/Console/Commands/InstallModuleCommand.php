@@ -88,8 +88,9 @@ class InstallModuleCommand extends Command
          */
         $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
         \Artisan::call('vendor:publish', [
+            '--provider' => $moduleProvider,
             '--tag' => 'webed-public-assets',
-            '--provider' => $moduleProvider
+            '--force' => ''
         ]);
         save_module_information($module, [
             'installed' => true,
