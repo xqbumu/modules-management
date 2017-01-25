@@ -16,7 +16,7 @@ class CreatePluginsTable extends Migration
         Schema::create('plugins', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('alias', 255);
+            $table->string('alias', 100)->unique();
             $table->string('installed_version', 255)->nullable();
             $table->tinyInteger('enabled', false, true)->default(0);
             $table->tinyInteger('installed', false, true)->default(0);
