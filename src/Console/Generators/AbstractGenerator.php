@@ -1,8 +1,8 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Generators;
 
-use Illuminate\Console\GeneratorCommand;
+use WebEd\Base\Core\Console\Generators\BaseAbstractGenerator;
 
-abstract class AbstractGenerator extends GeneratorCommand
+abstract class AbstractGenerator extends BaseAbstractGenerator
 {
     /**
      * @var array
