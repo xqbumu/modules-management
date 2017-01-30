@@ -29,6 +29,10 @@ Route::group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router $r
         ->name('admin::plugins.install.post')
         ->middleware('has-role:super-admin');
 
+    $router->post('plugins/update/{module}', 'PluginsController@postUpdate')
+        ->name('admin::plugins.update.post')
+        ->middleware('has-role:super-admin');
+
     $router->post('plugins/uninstall/{module}', 'PluginsController@postUninstall')
         ->name('admin::plugins.uninstall.post')
         ->middleware('has-role:super-admin');

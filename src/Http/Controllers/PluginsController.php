@@ -5,6 +5,7 @@ use WebEd\Base\Core\Support\DataTable\DataTables;
 use WebEd\Base\ModulesManagement\Http\DataTables\PluginsListDataTable;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 use WebEd\Base\ModulesManagement\Repositories\PluginsRepository;
+use Illuminate\Support\Facades\Artisan;
 
 class PluginsController extends BaseAdminController
 {
@@ -26,7 +27,7 @@ class PluginsController extends BaseAdminController
      * Get index page
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getIndex(PluginsListDataTable $pluginsListDataTable)
+    public function getIndex(PluginsListDataTable $dataTable)
     {
         $this->breadcrumbs->addLink('Plugins');
 
@@ -34,7 +35,7 @@ class PluginsController extends BaseAdminController
 
         $this->getDashboardMenu($this->dashboardMenuId);
 
-        $this->dis['dataTable'] = $pluginsListDataTable->run();
+        $this->dis['dataTable'] = $dataTable->run();
 
         return do_filter('webed-modules-plugin.index.get', $this)->viewAdmin('plugins-list');
     }
@@ -44,9 +45,9 @@ class PluginsController extends BaseAdminController
      * @param DataTables $dataTable
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postListing(PluginsListDataTable $pluginsListDataTable)
+    public function postListing(PluginsListDataTable $dataTable)
     {
-        return do_filter('datatables.webed-modules-plugin.index.post', $pluginsListDataTable, $this);
+        return do_filter('datatables.webed-modules-plugin.index.post', $dataTable, $this);
     }
 
     public function postChangeStatus($module, $status)
@@ -66,14 +67,29 @@ class PluginsController extends BaseAdminController
         $module = get_module_information($alias);
 
         if(!$module) {
-            return response_with_messages('Plugin not exists', true, 500);
+            return response_with_messages('Plugin not exists', true, \Constants::ERROR_CODE);
         }
 
-        \Artisan::call('module:install', [
+        Artisan::call('module:install', [
             'alias' => $alias
         ]);
 
         return response_with_messages('Installed plugin dependencies');
+    }
+
+    public function postUpdate($alias)
+    {
+        $module = get_module_information($alias);
+
+        if(!$module) {
+            return response_with_messages('Plugin not exists', true, \Constants::ERROR_CODE);
+        }
+
+        Artisan::call('module:update', [
+            'alias' => $alias
+        ]);
+
+        return response_with_messages('This plugin has been updated');
     }
 
     public function postUninstall($alias)
@@ -81,10 +97,10 @@ class PluginsController extends BaseAdminController
         $module = get_module_information($alias);
 
         if(!$module) {
-            return response_with_messages('Plugin not exists', true, 500);
+            return response_with_messages('Plugin not exists', true, \Constants::ERROR_CODE);
         }
 
-        \Artisan::call('module:uninstall', [
+        Artisan::call('module:uninstall', [
             'alias' => $alias
         ]);
 

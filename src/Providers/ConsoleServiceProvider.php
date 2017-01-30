@@ -52,6 +52,7 @@ class ConsoleServiceProvider extends ServiceProvider
         $this->commands([
             \WebEd\Base\ModulesManagement\Console\Commands\InstallCmsCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\InstallModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\UpdateModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\UninstallModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\DisableModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\EnableModuleCommand::class,
