@@ -75,7 +75,7 @@ class InstallModuleCommand extends Command
          * Migrate tables
          */
         $this->line('Migrate database...');
-        \Artisan::call('migrate');
+        //\Artisan::call('migrate');
         $this->line('Install module dependencies...');
 
         $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\InstallModuleServiceProvider');

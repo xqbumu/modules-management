@@ -74,11 +74,7 @@ class InstallCmsCommand extends Command
          * Migrate tables
          */
         $this->line('Migrate database...');
-        if ($this->option('refresh')) {
-            \Artisan::call('migrate:refresh');
-        } else {
-            \Artisan::call('migrate');
-        }
+        \Artisan::call('migrate');
 
         $this->line('Create super admin role...');
         $this->createSuperAdminRole();
