@@ -44,13 +44,13 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Generators\MakeMigration::class,
             \WebEd\Base\ModulesManagement\Console\Generators\MakeCommand::class,
             \WebEd\Base\ModulesManagement\Console\Generators\MakeDataTable::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeCriteria::class,
         ]);
     }
 
     private function otherCommands()
     {
         $this->commands([
-            \WebEd\Base\ModulesManagement\Console\Commands\InstallCmsCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\InstallModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\UpdateModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\UninstallModuleCommand::class,

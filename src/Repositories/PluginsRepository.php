@@ -1,12 +1,14 @@
 <?php namespace WebEd\Base\ModulesManagement\Repositories;
 
-use WebEd\Base\Core\Repositories\AbstractBaseRepository;
 use WebEd\Base\Caching\Services\Contracts\CacheableContract;
-
+use WebEd\Base\Caching\Services\Traits\Cacheable;
+use WebEd\Base\Core\Repositories\Eloquent\EloquentBaseRepository;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 
-class PluginsRepository extends AbstractBaseRepository implements PluginsRepositoryContract, CacheableContract
+class PluginsRepository extends EloquentBaseRepository implements PluginsRepositoryContract, CacheableContract
 {
+    use Cacheable;
+
     protected $rules = [
         'alias' => 'string|max:255|alpha_dash',
         'installed_version' => 'string|max:255',
@@ -25,6 +27,6 @@ class PluginsRepository extends AbstractBaseRepository implements PluginsReposit
      */
     public function getByAlias($alias)
     {
-        return $this->where('alias', '=', $alias)->first();
+        return $this->model->where('alias', '=', $alias)->first();
     }
 }

@@ -77,7 +77,7 @@ if (!function_exists('get_all_module_information')) {
         $pluginRepo = app(\WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract::class);
 
         if ($canAccessDB) {
-            $plugins = $pluginRepo->all();
+            $plugins = $pluginRepo->get();
         }
 
         foreach (['base', 'plugins'] as $type) {

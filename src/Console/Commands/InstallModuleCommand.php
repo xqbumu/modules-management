@@ -90,7 +90,7 @@ class InstallModuleCommand extends Command
         \Artisan::call('vendor:publish', [
             '--provider' => $moduleProvider,
             '--tag' => 'webed-public-assets',
-            '--force' => ''
+            '--force' => true
         ]);
         save_module_information($module, [
             'installed' => true,

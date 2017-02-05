@@ -37,7 +37,7 @@ class LoadModulesServiceProvider extends ServiceProvider
                      * Show the error messages
                      */
                     add_action('flash_messages', function () use ($module) {
-                        echo \Html::note(
+                        echo html()->note(
                             'The base module of this class is enabled, but class not found: ' . $module . '. Please review and add the namespace of this module to composer autoload section, then run <b>composer dump-autoload</b>',
                             'error',
                             false

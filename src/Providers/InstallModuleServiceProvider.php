@@ -31,6 +31,6 @@ class InstallModuleServiceProvider extends ServiceProvider
     private function booted()
     {
         acl_permission()
-            ->registerPermission('Manage plugins', 'view-plugins', $this->module);
+            ->registerPermission('View plugins', 'view-plugins', $this->module);
     }
 }

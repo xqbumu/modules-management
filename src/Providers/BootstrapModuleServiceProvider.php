@@ -13,8 +13,6 @@ class BootstrapModuleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        add_new_template('Homepage', 'Page');
-
         /**
          * Determine when our app booted
          */

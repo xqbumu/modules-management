@@ -1,10 +1,10 @@
 <?php namespace WebEd\Base\ModulesManagement\Repositories;
 
-use WebEd\Base\Caching\Repositories\AbstractRepositoryCacheDecorator;
+use WebEd\Base\Caching\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 
-class PluginsRepositoryCacheDecorator extends AbstractRepositoryCacheDecorator  implements PluginsRepositoryContract
+class PluginsRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator  implements PluginsRepositoryContract
 {
     /**
      * @param $alias
