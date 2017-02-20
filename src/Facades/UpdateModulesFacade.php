@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Facade;
 use WebEd\Base\ModulesManagement\Support\UpdateModulesSupport;
 
+/**
+ * @method static registerUpdateBatches($moduleAlias, array $batches)
+ * @method static loadBatches($moduleAlias)
+ */
 class UpdateModulesFacade extends Facade
 {
     /**

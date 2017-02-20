@@ -64,6 +64,13 @@ class UpdateModuleCommand extends Command
 
         $this->registerUpdateModuleService($module);
 
+        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
+        \Artisan::call('vendor:publish', [
+            '--provider' => $moduleProvider,
+            '--tag' => 'webed-public-assets',
+            '--force' => true
+        ]);
+
         $this->info("\nModule " . $this->argument('alias') . " has been updated.");
     }
 
