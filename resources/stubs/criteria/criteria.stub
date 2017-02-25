@@ -11,7 +11,7 @@ class DummyClass extends AbstractCriteria
       * @param AbstractBaseRepository $repository
       * @return mixed
       */
-    public function apply($model, AbstractBaseRepository $repository)
+    public function apply($model, AbstractRepositoryContract $repository)
     {
         return $model;
     }
