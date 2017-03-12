@@ -2,15 +2,11 @@
 
 use WebEd\Base\Core\Models\Contracts\BaseModelContract;
 use WebEd\Base\Core\Repositories\Eloquent\EloquentBaseRepository;
-use WebEd\Base\Caching\Services\Traits\Cacheable;
-use WebEd\Base\Caching\Services\Contracts\CacheableContract;
 
 use DummyNamespace\Contracts\DummyClassContract;
 
-class DummyClass extends EloquentBaseRepository implements DummyClassContract, CacheableContract
+class DummyClass extends EloquentBaseRepository implements DummyClassContract
 {
-    use Cacheable;
-
     protected $rules = [
 
     ];

@@ -27,7 +27,7 @@ class ConsoleServiceProvider extends ServiceProvider
         $this->otherCommands();
     }
 
-    private function generatorCommands()
+    protected function generatorCommands()
     {
         $this->commands([
             \WebEd\Base\ModulesManagement\Console\Generators\MakeModule::class,
@@ -45,10 +45,11 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Generators\MakeCommand::class,
             \WebEd\Base\ModulesManagement\Console\Generators\MakeDataTable::class,
             \WebEd\Base\ModulesManagement\Console\Generators\MakeCriteria::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\MakeAction::class,
         ]);
     }
 
-    private function otherCommands()
+    protected function otherCommands()
     {
         $this->commands([
             \WebEd\Base\ModulesManagement\Console\Commands\InstallModuleCommand::class,
