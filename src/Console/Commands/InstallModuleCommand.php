@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Commands;
 
 use Illuminate\Console\Command;
+use WebEd\Base\ModulesManagement\Facades\ModulesFacade;
 
 class InstallModuleCommand extends Command
 {
@@ -92,7 +93,7 @@ class InstallModuleCommand extends Command
             '--tag' => 'webed-public-assets',
             '--force' => true
         ]);
-        save_module_information($module, [
+        ModulesFacade::saveModule($module, [
             'installed' => true,
             'installed_version' => array_get($module, 'version'),
         ]);

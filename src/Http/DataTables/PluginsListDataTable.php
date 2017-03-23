@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\DataTables;
 
-use WebEd\Base\Core\Http\DataTables\AbstractDataTables;
+use WebEd\Base\Http\DataTables\AbstractDataTables;
 
 class PluginsListDataTable extends AbstractDataTables
 {

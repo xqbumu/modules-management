@@ -4,8 +4,6 @@ use Illuminate\Support\ServiceProvider;
 
 class ConsoleServiceProvider extends ServiceProvider
 {
-    protected $module = 'WebEd\Base\ModulesManagement';
-
     /**
      * Bootstrap any application services.
      *

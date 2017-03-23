@@ -1,7 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\Controllers;
 
-use WebEd\Base\Core\Http\Controllers\BaseAdminController;
-use WebEd\Base\Core\Support\DataTable\DataTables;
+use WebEd\Base\Http\Controllers\BaseAdminController;
+use WebEd\Base\Support\DataTable\DataTables;
 use WebEd\Base\ModulesManagement\Http\DataTables\PluginsListDataTable;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 use WebEd\Base\ModulesManagement\Repositories\PluginsRepository;

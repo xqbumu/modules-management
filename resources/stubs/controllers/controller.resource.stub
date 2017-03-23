@@ -1,7 +1,7 @@
 <?php namespace DummyNamespace;
 
 use Illuminate\Http\Request;
-use WebEd\Base\Core\Http\Controllers\BaseAdminController;
+use WebEd\Base\Http\Controllers\BaseAdminController;
 
 class DummyClass extends BaseAdminController
 {

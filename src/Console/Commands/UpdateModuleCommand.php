@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Commands;
 
 use Illuminate\Console\Command;
+use WebEd\Base\ModulesManagement\Facades\ModulesFacade;
 
 class UpdateModuleCommand extends Command
 {
@@ -83,7 +84,7 @@ class UpdateModuleCommand extends Command
             $this->app->register($namespace);
         }
 
-        save_module_information($module, [
+        ModulesFacade::saveModule($module, [
             'installed_version' => array_get($module, 'version'),
         ]);
 

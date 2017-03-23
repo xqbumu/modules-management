@@ -1,6 +1,6 @@
 <?php namespace DummyNamespace;
 
-use WebEd\Base\Core\Http\Controllers\BaseAdminController;
+use WebEd\Base\Http\Controllers\BaseAdminController;
 
 class DummyClass extends BaseAdminController
 {

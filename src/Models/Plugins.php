@@ -1,7 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Models;
 
 use WebEd\Base\ModulesManagement\Models\Contracts\PluginsModelContract;
-use WebEd\Base\Core\Models\EloquentBase as BaseModel;
+use WebEd\Base\Models\EloquentBase as BaseModel;
 
 class Plugins extends BaseModel implements PluginsModelContract
 {

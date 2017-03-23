@@ -1,32 +1,32 @@
 <?php namespace DummyNamespace;
 
-use WebEd\Base\Core\Models\Contracts\BaseModelContract;
+use WebEd\Base\Models\Contracts\BaseModelContract;
 
-interface DummyClassContract
+interface DummyClassRepositoryContract
 {
     /**
      * @param array $data
      * @return array
      */
-    public function createModel(array $data);
+    public function createDummyClass(array $data);
 
     /**
      * @param int|null|BaseModelContract $id
      * @param array $data
      * @return array
      */
-    public function createOrUpdateModel($id, array $data);
+    public function createOrUpdateDummyClass($id, array $data);
 
     /**
      * @param int|null|BaseModelContract $id
      * @param array $data
      * @return array
      */
-    public function updateModel($id, array $data);
+    public function updateDummyClass($id, array $data);
 
     /**
      * @param int|BaseModelContract|array $id
      * @return array
      */
-    public function deleteModel($id);
+    public function deleteDummyClass($id);
 }

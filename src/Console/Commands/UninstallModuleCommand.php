@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Commands;
 
 use Illuminate\Console\Command;
+use WebEd\Base\ModulesManagement\Facades\ModulesFacade;
 
 class UninstallModuleCommand extends Command
 {
@@ -66,7 +67,7 @@ class UninstallModuleCommand extends Command
         if(class_exists($namespace)) {
             $this->app->register($namespace);
         }
-        save_module_information($module, [
+        ModulesFacade::saveModule($module, [
             'installed' => false
         ]);
         $this->line('Uninstalled');

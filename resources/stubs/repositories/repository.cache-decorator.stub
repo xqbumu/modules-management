@@ -1,17 +1,17 @@
 <?php namespace DummyNamespace;
 
-use WebEd\Base\Caching\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
+use WebEd\Base\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 
-use DummyNamespace\Contracts\DummyClassContract;
-use WebEd\Base\Core\Models\Contracts\BaseModelContract;
+use DummyNamespace\Contracts\DummyClassRepositoryContract;
+use WebEd\Base\Models\Contracts\BaseModelContract;
 
-class DummyClassCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements DummyClassContract
+class DummyClassRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements DummyClassRepositoryContract
 {
     /**
      * @param array $data
      * @return array
      */
-    public function createModel(array $data)
+    public function createDummyClass(array $data)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }
@@ -21,7 +21,7 @@ class DummyClassCacheDecorator extends EloquentBaseRepositoryCacheDecorator impl
      * @param array $data
      * @return array
      */
-    public function createOrUpdateModel($id, array $data)
+    public function createOrUpdateDummyClass($id, array $data)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }
@@ -31,7 +31,7 @@ class DummyClassCacheDecorator extends EloquentBaseRepositoryCacheDecorator impl
      * @param array $data
      * @return array
      */
-    public function updateModel($id, array $data)
+    public function updateDummyClass($id, array $data)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }
@@ -40,7 +40,7 @@ class DummyClassCacheDecorator extends EloquentBaseRepositoryCacheDecorator impl
      * @param int|BaseModelContract|array $id
      * @return array
      */
-    public function deleteModel($id)
+    public function deleteDummyClass($id)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }

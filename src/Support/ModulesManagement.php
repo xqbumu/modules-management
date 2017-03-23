@@ -6,6 +6,7 @@ use WebEd\Base\ModulesManagement\Events\ModuleDisabled;
 use WebEd\Base\ModulesManagement\Events\ModuleEnabled;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Composer;
+use WebEd\Base\ModulesManagement\Facades\ModulesFacade;
 
 class ModulesManagement
 {
@@ -54,7 +55,7 @@ class ModulesManagement
             return $this;
         }
 
-        save_module_information($currentModule, $data);
+        ModulesFacade::saveModule($currentModule, $data);
 
         if ($callback) {
             call_user_func($callback);

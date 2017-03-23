@@ -32,7 +32,7 @@ class MakeRepository extends AbstractGenerator
 
         $name = $this->parseName($nameInput);
 
-        $path = $this->getPath($name);
+        $path = $this->getPath($name . 'Repository');
 
         if ($this->alreadyExists($nameInput)) {
             $this->error($this->type . ' already exists!');
@@ -50,16 +50,16 @@ class MakeRepository extends AbstractGenerator
          * Make cache decorator
          */
         $this->buildStep = 'make-cache-decorator';
-        $pathCacheDecorator = $this->getPath($name . 'CacheDecorator');
+        $pathCacheDecorator = $this->getPath($name . 'RepositoryCacheDecorator');
         $this->makeDirectory($pathCacheDecorator);
-        $this->files->put($pathCacheDecorator, $this->buildClass($name));
+        $this->files->put($pathCacheDecorator, $this->buildClass($name . 'Repository'));
 
         /**
          * Create model contract
          */
         $this->buildStep = 'make-contract';
         $contractName = 'Contracts/' . get_file_name($path, '.php');
-        $contractPath = get_base_folder($path) . $contractName . 'Contract.php';
+        $contractPath = get_base_folder($path) . $contractName . 'RepositoryContract.php';
 
         $this->makeDirectory($contractPath);
 
@@ -93,5 +93,19 @@ class MakeRepository extends AbstractGenerator
             return 'Repositories\\Contracts\\' . $this->argument('name');
         }
         return 'Repositories\\' . $this->argument('name');
+    }
+
+    /**
+     * Replace the class name for the given stub.
+     *
+     * @param  string $stub
+     * @param  string $name
+     * @return string
+     */
+    protected function replaceClass($stub, $name)
+    {
+        $class = class_basename($this->getNameInput());
+
+        return str_replace('DummyClass', $class, $stub);
     }
 }

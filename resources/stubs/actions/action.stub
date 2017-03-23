@@ -1,6 +1,6 @@
 <?php namespace DummyNamespace;
 
-use WebEd\Base\Core\Actions\AbstractAction;
+use WebEd\Base\Actions\AbstractAction;
 
 class DummyClass extends AbstractAction
 {

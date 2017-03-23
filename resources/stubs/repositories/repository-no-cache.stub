@@ -1,11 +1,11 @@
 <?php namespace DummyNamespace;
 
-use WebEd\Base\Core\Models\Contracts\BaseModelContract;
-use WebEd\Base\Core\Repositories\Eloquent\EloquentBaseRepository;
+use WebEd\Base\Models\Contracts\BaseModelContract;
+use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
 
-use DummyNamespace\Contracts\DummyClassContract;
+use DummyNamespace\Contracts\DummyClassRepositoryContract;
 
-class DummyClass extends EloquentBaseRepository implements DummyClassContract
+class DummyClassRepository extends EloquentBaseRepository implements DummyClassRepositoryContract
 {
     protected $rules = [
 
@@ -19,7 +19,7 @@ class DummyClass extends EloquentBaseRepository implements DummyClassContract
      * @param array $data
      * @return array
      */
-    public function createModel(array $data)
+    public function createDummyClass(array $data)
     {
         return $this->editWithValidate(null, $data, true, false);
     }
@@ -29,7 +29,7 @@ class DummyClass extends EloquentBaseRepository implements DummyClassContract
      * @param array $data
      * @return array
      */
-    public function createOrUpdateModel($id, array $data)
+    public function createOrUpdateDummyClass($id, array $data)
     {
         $model = $id instanceof BaseModelContract ? $id : $this->find($id);
         $justUpdateSomeFields = true;
@@ -45,7 +45,7 @@ class DummyClass extends EloquentBaseRepository implements DummyClassContract
      * @param array $data
      * @return array
      */
-    public function updateModel($id, array $data)
+    public function updateDummyClass($id, array $data)
     {
         return $this->editWithValidate($id, $data, true, true);
     }
@@ -54,7 +54,7 @@ class DummyClass extends EloquentBaseRepository implements DummyClassContract
      * @param int|BaseModelContract|array $id
      * @return array
      */
-    public function deleteModel($id)
+    public function deleteDummyClass($id)
     {
         if (!$id) {
             return response_with_messages('Model not exists', true, \Constants::ERROR_CODE);

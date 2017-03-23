@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Generators;
 
-use WebEd\Base\Core\Console\Generators\BaseAbstractGenerator;
+use WebEd\Base\Console\Generators\BaseAbstractGenerator;
 
 abstract class AbstractGenerator extends BaseAbstractGenerator
 {
@@ -17,7 +17,7 @@ abstract class AbstractGenerator extends BaseAbstractGenerator
     protected function resolveModuleRootFolder($module)
     {
         switch (array_get($module, 'type')) {
-            case 'base':
+            case 'core':
                 $path = webed_base_path();
                 break;
             case 'plugin':
