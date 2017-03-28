@@ -1,7 +1,9 @@
 <?php namespace WebEd\Base\ModulesManagement\Providers;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use WebEd\Base\ModulesManagement\Facades\ModulesManagementFacade;
+use WebEd\Base\ModulesManagement\Http\Middleware\BootstrapModuleMiddleware;
 
 class ModuleProvider extends ServiceProvider
 {
@@ -31,6 +33,10 @@ class ModuleProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/themes' => base_path(),
         ], 'public-assets');
+
+        app()->booted(function () {
+            $this->app->register(BootstrapModuleServiceProvider::class);
+        });
     }
 
     /**
@@ -48,10 +54,15 @@ class ModuleProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(LoadModulesServiceProvider::class);
         $this->app->register(HookServiceProvider::class);
-        $this->app->register(BootstrapModuleServiceProvider::class);
 
         //Register related facades
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('ModulesManagement', ModulesManagementFacade::class);
+
+        /**
+         * @var Router $router
+         */
+        $router = $this->app['router'];
+        $router->pushMiddlewareToGroup('web', BootstrapModuleMiddleware::class);
     }
 }

@@ -6,6 +6,7 @@ use WebEd\Base\ModulesManagement\Http\DataTables\PluginsListDataTable;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 use WebEd\Base\ModulesManagement\Repositories\PluginsRepository;
 use Illuminate\Support\Facades\Artisan;
+use Yajra\Datatables\Engines\BaseEngine;
 
 class PluginsController extends BaseAdminController
 {
@@ -29,9 +30,9 @@ class PluginsController extends BaseAdminController
      */
     public function getIndex(PluginsListDataTable $dataTable)
     {
-        $this->breadcrumbs->addLink('Plugins');
+        $this->breadcrumbs->addLink(trans('webed-modules-management::base.plugins'));
 
-        $this->setPageTitle('Plugins');
+        $this->setPageTitle(trans('webed-modules-management::base.plugins'));
 
         $this->getDashboardMenu($this->dashboardMenuId);
 
@@ -42,7 +43,7 @@ class PluginsController extends BaseAdminController
 
     /**
      * Set data for DataTable plugin
-     * @param DataTables $dataTable
+     * @param PluginsListDataTable|BaseEngine $dataTable
      * @return \Illuminate\Http\JsonResponse
      */
     public function postListing(PluginsListDataTable $dataTable)
@@ -67,14 +68,14 @@ class PluginsController extends BaseAdminController
         $module = get_module_information($alias);
 
         if(!$module) {
-            return response_with_messages('Plugin not exists', true, \Constants::ERROR_CODE);
+            return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('module:install', [
             'alias' => $alias
         ]);
 
-        return response_with_messages('Installed plugin dependencies');
+        return response_with_messages(trans('webed-modules-management::base.plugin_installed'));
     }
 
     public function postUpdate($alias)
@@ -82,14 +83,14 @@ class PluginsController extends BaseAdminController
         $module = get_module_information($alias);
 
         if(!$module) {
-            return response_with_messages('Plugin not exists', true, \Constants::ERROR_CODE);
+            return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('module:update', [
             'alias' => $alias
         ]);
 
-        return response_with_messages('This plugin has been updated');
+        return response_with_messages(trans('webed-modules-management::base.plugin_updated'));
     }
 
     public function postUninstall($alias)
@@ -97,13 +98,13 @@ class PluginsController extends BaseAdminController
         $module = get_module_information($alias);
 
         if(!$module) {
-            return response_with_messages('Plugin not exists', true, \Constants::ERROR_CODE);
+            return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('module:uninstall', [
             'alias' => $alias
         ]);
 
-        return response_with_messages('Uninstalled plugin dependencies');
+        return response_with_messages(trans('webed-modules-management::base.plugin_uninstalled'));
     }
 }

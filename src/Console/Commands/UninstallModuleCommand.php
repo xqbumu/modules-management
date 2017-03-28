@@ -68,7 +68,8 @@ class UninstallModuleCommand extends Command
             $this->app->register($namespace);
         }
         ModulesFacade::saveModule($module, [
-            'installed' => false
+            'installed' => false,
+            'installed_version' => '',
         ]);
         $this->line('Uninstalled');
     }

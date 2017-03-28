@@ -1,4 +1,5 @@
 <?php
+
 use \WebEd\Base\ModulesManagement\Support\UpdateModulesSupport;
 use \WebEd\Base\ModulesManagement\Facades\UpdateModulesFacade;
 

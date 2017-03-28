@@ -1,18 +1,49 @@
 <?php namespace DummyNamespace;
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
+use Yajra\Datatables\Engines\CollectionEngine;
+use Yajra\Datatables\Engines\EloquentEngine;
+use Yajra\Datatables\Engines\QueryBuilderEngine;
 
 class DummyClass extends AbstractDataTables
 {
-    protected $repository;
+    protected $model;
 
-    public function __construct(YourRepositoryContract $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->model = YourModel::select(['id', 'title', 'created_at']);
+    }
 
-        $this->repository->select('id', 'created_at');
+    public function headings()
+    {
+        return [
+            'id' => [
+                'title' => 'ID',
+                'width' => '5%',
+            ],
+            'title' => [
+                'title' => 'Title',
+                'width' => '20%',
+            ],
+            'created_at' => [
+                'title' => 'Created at',
+                'width' => '50%',
+            ],
+            'actions' => [
+                'title' => trans('webed-core::datatables.heading.actions'),
+                'width' => '30%',
+            ],
+        ];
+    }
 
-        parent::__construct();
+    public function columns()
+    {
+        return [
+            ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
+            ['data' => 'title', 'name' => 'title'],
+            ['data' => 'created_at', 'name' => 'created_at'],
+            ['data' => 'actions', 'name' => 'actions', 'searchable' => false, 'orderable' => false],
+        ];
     }
 
     /**
@@ -23,39 +54,68 @@ class DummyClass extends AbstractDataTables
         $this->setAjaxUrl('fetch-data-url', 'POST');
 
         $this
-            ->addHeading('title', 'Title', '25%');
-
-        $this
             ->addFilter(1, form()->text('title', '', [
                 'class' => 'form-control form-filter input-sm',
-                'placeholder' => 'Search...'
+                'placeholder' => trans('webed-core::datatables.search') . '...',
             ]));
 
         $this->withGroupActions([
-            '' => 'Select' . '...',
-            'deleted' => 'Deleted',
-            'activated' => 'Activated',
-            'disabled' => 'Disabled',
-        ]);
-
-        $this->setColumns([
-            ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
-            ['data' => 'title', 'name' => 'title'],
+            '' => trans('webed-core::datatables.select') . '...',
+            'deleted' => trans('webed-core::datatables.delete_these_items'),
+            'activated' => trans('webed-core::datatables.active_these_items'),
+            'disabled' => trans('webed-core::datatables.disable_these_items'),
         ]);
 
         return $this->view();
     }
 
     /**
-     * @return $this
+     * @return CollectionEngine|EloquentEngine|QueryBuilderEngine|mixed
      */
-    protected function fetch()
+    protected function fetchDataForAjax()
     {
-        $this->fetch = datatable()->of($this->repository)
+        return datatable()->of($this->model)
+            ->rawColumns(['actions'])
             ->editColumn('id', function ($item) {
                 return form()->customCheckbox([['id[]', $item->id]]);
-            });
+            })
+            ->editColumn('status', function ($item) {
+                return html()->label(trans('webed-core::base.status.' . $item->status), $item->status);
+            })
+            ->addColumn('actions', function ($item) {
+                /*Edit link*/
+                $activeLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 'activated']);
+                $disableLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 'disabled']);
+                $deleteLink = route('admin::your-module.delete.delete', ['id' => $item->id]);
 
-        return $this;
+                /*Buttons*/
+                $editBtn = link_to(route('admin::your-module.edit.get', ['id' => $item->id]), trans('webed-core::datatables.edit'), ['class' => 'btn btn-sm btn-outline green']);
+                $activeBtn = ($item->status != 'activated') ? form()->button(trans('webed-core::datatables.active'), [
+                    'title' => trans('webed-core::datatables.active_this_item'),
+                    'data-ajax' => $activeLink,
+                    'data-method' => 'POST',
+                    'data-toggle' => 'confirmation',
+                    'class' => 'btn btn-outline blue btn-sm ajax-link',
+                    'type' => 'button',
+                ]) : '';
+                $disableBtn = ($item->status != 'disabled') ? form()->button(trans('webed-core::datatables.disable'), [
+                    'title' => trans('webed-core::datatables.disable_this_item'),
+                    'data-ajax' => $disableLink,
+                    'data-method' => 'POST',
+                    'data-toggle' => 'confirmation',
+                    'class' => 'btn btn-outline yellow-lemon btn-sm ajax-link',
+                    'type' => 'button',
+                ]) : '';
+                $deleteBtn = form()->button(trans('webed-core::datatables.delete'), [
+                    'title' => trans('webed-core::datatables.delete_this_item'),
+                    'data-ajax' => $deleteLink,
+                    'data-method' => 'DELETE',
+                    'data-toggle' => 'confirmation',
+                    'class' => 'btn btn-outline red-sunglo btn-sm ajax-link',
+                    'type' => 'button',
+                ]);
+
+                return $editBtn . $activeBtn . $disableBtn . $deleteBtn;
+            });
     }
 }

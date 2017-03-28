@@ -1,6 +1,9 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\DataTables;
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
+use Yajra\Datatables\Engines\CollectionEngine;
+use Yajra\Datatables\Engines\EloquentEngine;
+use Yajra\Datatables\Engines\QueryBuilderEngine;
 
 class PluginsListDataTable extends AbstractDataTables
 {
@@ -8,9 +11,40 @@ class PluginsListDataTable extends AbstractDataTables
 
     public function __construct()
     {
-        $this->repository = modules_management()->export('plugins')->values();
+        $this->repository = modules_management()->export('plugins');
+    }
 
-        parent::__construct();
+    /**
+     * @return array
+     */
+    public function headings()
+    {
+        return [
+            'name' => [
+                'title' => trans('webed-modules-management::datatables.heading.name'),
+                'width' => '20%',
+            ],
+            'description' => [
+                'title' => trans('webed-modules-management::datatables.heading.description'),
+                'width' => '50%',
+            ],
+            'actions' => [
+                'title' => trans('webed-core::datatables.heading.actions'),
+                'width' => '30%',
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function columns()
+    {
+        return [
+            ['data' => 'name', 'name' => 'name', 'searchable' => false, 'orderable' => false],
+            ['data' => 'description', 'name' => 'description', 'searchable' => false, 'orderable' => false],
+            ['data' => 'actions', 'name' => 'actions', 'searchable' => false, 'orderable' => false],
+        ];
     }
 
     /**
@@ -20,35 +54,25 @@ class PluginsListDataTable extends AbstractDataTables
     {
         $this->setAjaxUrl(route('admin::plugins.index.post'), 'POST');
 
-        $this
-            ->addHeading('name', 'Name', '20%')
-            ->addHeading('description', 'Description', '50%')
-            ->addHeading('actions', 'Actions', '30%');
-
-        $this->setColumns([
-            ['data' => 'name', 'name' => 'name', 'searchable' => false, 'orderable' => false],
-            ['data' => 'description', 'name' => 'description', 'searchable' => false, 'orderable' => false],
-            ['data' => 'actions', 'name' => 'actions', 'searchable' => false, 'orderable' => false],
-        ]);
-
         return $this->view();
     }
 
     /**
-     * @return $this
+     * @return CollectionEngine|EloquentEngine|QueryBuilderEngine|mixed
      */
-    protected function fetch()
+    protected function fetchDataForAjax()
     {
-        $this->fetch = datatable()->of($this->repository)
+        return datatable()->of($this->repository)
+            ->rawColumns(['description', 'actions'])
             ->editColumn('description', function ($item) {
                 return array_get($item, 'description') . '<br><br>'
-                    . 'Author: ' . array_get($item, 'author') . '<br><br>'
-                    . 'Version: <b>' . array_get($item, 'version', '...') . '</b>' . '<br>'
-                    . 'Installed version: <b>' . array_get($item, 'installed_version', '...') . '</b>';
+                    . trans('webed-modules-management::datatables.author') . ': <b>' . array_get($item, 'author') . '</b><br>'
+                    . trans('webed-modules-management::datatables.version') . ': <b>' . array_get($item, 'version', '...') . '</b><br>'
+                    . trans('webed-modules-management::datatables.installed_version') . ': <b>' . (array_get($item, 'installed_version', '...') ?: '...') . '</b>';
             })
             ->addColumn('actions', function ($item) {
-                $activeBtn = (!array_get($item, 'enabled')) ? form()->button('Active', [
-                    'title' => 'Active this plugin',
+                $activeBtn = (!array_get($item, 'enabled')) ? form()->button(trans('webed-modules-management::datatables.active'), [
+                    'title' => trans('webed-modules-management::datatables.active_this_plugin'),
                     'data-ajax' => route('admin::plugins.change-status.post', [
                         'module' => array_get($item, 'alias'),
                         'status' => 1,
@@ -58,8 +82,8 @@ class PluginsListDataTable extends AbstractDataTables
                     'class' => 'btn btn-outline green btn-sm ajax-link',
                 ]) : '';
 
-                $disableBtn = (array_get($item, 'enabled')) ? form()->button('Disable', [
-                    'title' => 'Disable this plugin',
+                $disableBtn = (array_get($item, 'enabled')) ? form()->button(trans('webed-modules-management::datatables.disable'), [
+                    'title' => trans('webed-modules-management::datatables.disable_this_plugin'),
                     'data-ajax' => route('admin::plugins.change-status.post', [
                         'module' => array_get($item, 'alias'),
                         'status' => 0,
@@ -69,8 +93,8 @@ class PluginsListDataTable extends AbstractDataTables
                     'class' => 'btn btn-outline yellow-lemon btn-sm ajax-link',
                 ]) : '';
 
-                $installBtn = (array_get($item, 'enabled') && !array_get($item, 'installed')) ? form()->button('Install', [
-                    'title' => 'Install this plugin\'s dependencies',
+                $installBtn = (array_get($item, 'enabled') && !array_get($item, 'installed')) ? form()->button(trans('webed-modules-management::datatables.install'), [
+                    'title' => trans('webed-modules-management::datatables.install_this_plugin'),
                     'data-ajax' => route('admin::plugins.install.post', [
                         'module' => array_get($item, 'alias'),
                     ]),
@@ -84,8 +108,8 @@ class PluginsListDataTable extends AbstractDataTables
                     array_get($item, 'installed') &&
                     version_compare(array_get($item, 'installed_version'), array_get($item, 'version'), '<')
                 )
-                    ? form()->button('Update', [
-                        'title' => 'Update this plugin',
+                    ? form()->button(trans('webed-modules-management::datatables.update'), [
+                        'title' => trans('webed-modules-management::datatables.update_this_plugin'),
                         'data-ajax' => route('admin::plugins.update.post', [
                             'module' => array_get($item, 'alias'),
                         ]),
@@ -95,8 +119,8 @@ class PluginsListDataTable extends AbstractDataTables
                     ])
                     : '';
 
-                $uninstallBtn = (array_get($item, 'enabled') && array_get($item, 'installed')) ? form()->button('Uninstall', [
-                    'title' => 'Uninstall this plugin\'s dependencies',
+                $uninstallBtn = (array_get($item, 'enabled') && array_get($item, 'installed')) ? form()->button(trans('webed-modules-management::datatables.uninstall'), [
+                    'title' => trans('webed-modules-management::datatables.uninstall_this_plugin'),
                     'data-ajax' => route('admin::plugins.uninstall.post', [
                         'module' => array_get($item, 'alias'),
                     ]),
@@ -107,7 +131,5 @@ class PluginsListDataTable extends AbstractDataTables
 
                 return $activeBtn . $disableBtn . $installBtn . $updateBtn . $uninstallBtn;
             });
-
-        return $this;
     }
 }
