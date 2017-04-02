@@ -49,11 +49,11 @@ class ModuleProvider extends ServiceProvider
         //Load helpers
         load_module_helpers(__DIR__);
 
+        $this->app->register(HookServiceProvider::class);
         $this->app->register(ConsoleServiceProvider::class);
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(LoadModulesServiceProvider::class);
-        $this->app->register(HookServiceProvider::class);
 
         //Register related facades
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();

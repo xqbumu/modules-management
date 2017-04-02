@@ -9,21 +9,9 @@ class PluginsRepository extends EloquentBaseRepository implements PluginsReposit
 {
     use Cacheable;
 
-    protected $rules = [
-        'alias' => 'string|max:255|alpha_dash',
-        'installed_version' => 'string|max:255',
-    ];
-
-    protected $editableFields = [
-        'alias',
-        'installed_version',
-        'enabled',
-        'installed',
-    ];
-
     /**
      * @param $alias
-     * @return mixed
+     * @return mixed|null
      */
     public function getByAlias($alias)
     {

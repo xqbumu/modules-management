@@ -64,16 +64,16 @@ class Modules
 
                         if (!$plugin) {
                             $result = $this->pluginRepository
-                                ->editWithValidate(0, [
+                                ->create([
                                     'alias' => array_get($data, 'alias'),
                                     'enabled' => false,
                                     'installed' => false,
-                                ], true, true);
+                                ]);
                             /**
                              * Everything ok
                              */
-                            if (!$result['error']) {
-                                $plugin = $result['data'];
+                            if ($result) {
+                                $plugin = $this->pluginRepository->find($result);
                             }
                         }
                         if ($plugin) {
@@ -159,11 +159,9 @@ class Modules
             return false;
         }
 
-        $result = $this->pluginRepository
-            ->editWithValidate(array_get($module, 'id'), array_merge($data, [
+        return $this->pluginRepository
+            ->createOrUpdate(array_get($module, 'id'), array_merge($data, [
                 'alias' => array_get($module, 'alias'),
-            ]), true, true);
-
-        return !array_get($result, 'error');
+            ]));
     }
 }

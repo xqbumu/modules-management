@@ -16,4 +16,5 @@ return [
     'plugin_installed' => 'Plugin installed',
     'plugin_activated' => 'Plugin activated',
     'plugin_uninstalled' => 'Plugin uninstalled',
+    'plugin_updated' => 'Plugin updated',
 ];

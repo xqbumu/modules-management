@@ -119,7 +119,7 @@ class DummyClass extends BaseAdminController
         $data = [
             'status' => $status
         ];
-        $result = $this->repository->editWithValidate($id, $data, false, true);
+        $result = $this->repository->`editWithValidate($id, $data, false, true);
         return response()->json($result, $result['response_code']);
     }
 

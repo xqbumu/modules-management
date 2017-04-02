@@ -8,7 +8,7 @@ class PluginsRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorat
 {
     /**
      * @param $alias
-     * @return mixed
+     * @return mixed|null
      */
     public function getByAlias($alias)
     {

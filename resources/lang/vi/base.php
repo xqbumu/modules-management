@@ -16,4 +16,5 @@ return [
     'plugin_installed' => 'Bộ mở rộng đã được cài đặt',
     'plugin_activated' => 'Bộ mở rộng đã được kích hoạt',
     'plugin_uninstalled' => 'Bộ mở rộng đã được gỡ bỏ',
+    'plugin_updated' => 'Bộ mở rộng đã được cập nhật',
 ];

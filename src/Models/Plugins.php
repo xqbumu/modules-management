@@ -9,7 +9,12 @@ class Plugins extends BaseModel implements PluginsModelContract
 
     protected $primaryKey = 'id';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'alias',
+        'installed_version',
+        'enabled',
+        'installed',
+    ];
 
     public $timestamps = false;
 
