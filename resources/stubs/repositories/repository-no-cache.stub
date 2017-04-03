@@ -7,21 +7,13 @@ use DummyNamespace\Contracts\DummyClassRepositoryContract;
 
 class DummyClassRepository extends EloquentBaseRepository implements DummyClassRepositoryContract
 {
-    protected $rules = [
-
-    ];
-
-    protected $editableFields = [
-        '*',
-    ];
-
     /**
      * @param array $data
      * @return array
      */
     public function createDummyClass(array $data)
     {
-        return $this->editWithValidate(null, $data, true, false);
+        return $this->create($data);
     }
 
     /**
@@ -31,13 +23,7 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
      */
     public function createOrUpdateDummyClass($id, array $data)
     {
-        $model = $id instanceof BaseModelContract ? $id : $this->find($id);
-        $justUpdateSomeFields = true;
-        if (!$model) {
-            $justUpdateSomeFields = false;
-        }
-
-        return $this->editWithValidate($model, $data, true, $justUpdateSomeFields);
+        return $this->createOrUpdate($id, $data);
     }
 
     /**
@@ -47,7 +33,7 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
      */
     public function updateDummyClass($id, array $data)
     {
-        return $this->editWithValidate($id, $data, true, true);
+        return $this->update($id, $data);
     }
 
     /**
@@ -56,13 +42,6 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
      */
     public function deleteDummyClass($id)
     {
-        if (!$id) {
-            return response_with_messages('Model not exists', true, \Constants::ERROR_CODE);
-        }
-        $result = $this->delete($id);
-        if ($result['error']) {
-            return $result;
-        }
-        return response_with_messages('Deleted', false, \Constants::SUCCESS_NO_CONTENT_CODE);
+        return $this->delete($id);
     }
 }

@@ -25,12 +25,12 @@ class DummyClass extends BaseAdminController
         $this->repository = $repository;
 
         $this->middleware(function (Request $request, $next) {
+            $this->getDashboardMenu($this->module);
+
             $this->breadcrumbs->addLink(trans('{alias}::base.page_title'), route('admin::your-module.index.get'));
 
             return $next($request);
         });
-
-        $this->getDashboardMenu($this->module);
     }
 
     /**
@@ -101,8 +101,8 @@ class DummyClass extends BaseAdminController
                     ];
                     break;
             }
-            $data['customActionMessage'] = $result['messages'];
-            $data['customActionStatus'] = $result['error'] ? 'danger' : 'success';
+            $data['customActionMessage'] = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+            $data['customActionStatus'] = !$result ? 'danger' : 'success';
 
         }
         return $data;
@@ -119,8 +119,9 @@ class DummyClass extends BaseAdminController
         $data = [
             'status' => $status
         ];
-        $result = $this->repository->`editWithValidate($id, $data, false, true);
-        return response()->json($result, $result['response_code']);
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+        $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
+        return response()->json(response_with_messages($msg, !$result, $code), $code);
     }
 
     /**
@@ -151,13 +152,14 @@ class DummyClass extends BaseAdminController
 
         do_action(BASE_ACTION_AFTER_CREATE, '{alias}', $result);
 
-        $msgType = $result['error'] ? 'danger' : 'success';
+        $msgType = !$result ? 'danger' : 'success';
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
 
         flash_messages()
-            ->addMessages($result['messages'], $msgType)
+            ->addMessages($msg, $msgType)
             ->showMessagesOnSession();
 
-        if ($result['error']) {
+        if (!$result) {
             return redirect()->back()->withInput();
         }
 
@@ -217,14 +219,15 @@ class DummyClass extends BaseAdminController
 
         $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, '{alias}', 'edit.post');
 
-        $result = $this->repository->editWithValidate($item, $request->all(), false, true);
+        $result = $this->repository->update($item, $request->all());
 
         do_action(BASE_ACTION_AFTER_UPDATE, '{alias}', $id, $result);
 
-        $msgType = $result['error'] ? 'danger' : 'success';
+        $msgType = !$result ? 'danger' : 'success';
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
 
         flash_messages()
-            ->addMessages($result['messages'], $msgType)
+            ->addMessages($msg, $msgType)
             ->showMessagesOnSession();
 
         if ($this->request->has('_continue_edit')) {
@@ -246,6 +249,8 @@ class DummyClass extends BaseAdminController
 
         do_action(BASE_ACTION_AFTER_DELETE, '{alias}', $id, $result);
 
-        return response()->json($result, $result['response_code']);
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+        $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
+        return response()->json(response_with_messages($msg, !$result, $code), $code);
     }
 }
