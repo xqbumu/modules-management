@@ -32,15 +32,15 @@ class InstallModuleServiceProvider extends ServiceProvider
 
     }
 
-    private function booted()
+    protected function booted()
     {
         $this->createSchema();
         //acl_permission()
-        //->registerPermission('Permission 1 description', 'description-1', $this->module)
-        //->registerPermission('Permission 2 description', 'description-2', $this->module);
+        //->registerPermission('Permission 1 description', 'description-1', $this->moduleAlias)
+        //->registerPermission('Permission 2 description', 'description-2', $this->moduleAlias);
     }
 
-    private function createSchema()
+    protected function createSchema()
     {
         //Schema::create('field_groups', function (Blueprint $table) {
         //    $table->engine = 'InnoDB';

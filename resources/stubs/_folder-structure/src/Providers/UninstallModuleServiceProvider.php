@@ -30,15 +30,15 @@ class UninstallModuleServiceProvider extends ServiceProvider
 
     }
 
-    private function booted()
+    protected function booted()
     {
         acl_permission()
-        ->unsetPermissionByModule($this->module);
+        ->unsetPermissionByModule($this->moduleAlias);
 
         $this->dropSchema();
     }
 
-    private function dropSchema()
+    protected function dropSchema()
     {
         //\Schema::dropIfExists('table-name');
     }

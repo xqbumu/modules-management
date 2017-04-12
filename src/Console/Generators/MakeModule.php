@@ -69,7 +69,7 @@ class MakeModule extends Command
         $this->step1();
     }
 
-    private function step1()
+    protected function step1()
     {
         $this->moduleFolderName = str_slug($this->ask('Module folder name:', $this->container['alias']));
         $this->container['name'] = $this->ask('Name of module:', 'WebEd ' . $this->container['alias']);
@@ -83,14 +83,14 @@ class MakeModule extends Command
         $this->step2();
     }
 
-    private function step2()
+    protected function step2()
     {
         $this->generatingModule();
 
         $this->info("\nYour module generated successfully.");
     }
 
-    private function generatingModule()
+    protected function generatingModule()
     {
         $pathType = $this->makeModuleFolder();
         $directory = $pathType($this->moduleFolderName);
@@ -120,7 +120,7 @@ class MakeModule extends Command
         \File::put($directory . '/module.json', json_encode_prettify($this->container));
     }
 
-    private function makeModuleFolder()
+    protected function makeModuleFolder()
     {
         switch ($this->moduleType) {
             case 'base':

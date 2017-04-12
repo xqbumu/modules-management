@@ -84,20 +84,20 @@ class DummyClass extends BaseAdminController
                         ];
                     }
                     /**
-                     * Delete pages
+                     * Delete items
                      */
-                    $result = $this->deleteDelete($ids);
+                    $result = $this->repository->delete($ids);
                     break;
                 case 'activated':
                 case 'disabled':
                     $result = $this->repository->updateMultiple($ids, [
                         'status' => $actionValue,
-                    ], true);
+                    ]);
                     break;
                 default:
-                    $result = [
-                        'messages' => trans('webed-base::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
-                        'error' => true
+                    return [
+                        'customActionMessage' => trans('webed-core::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
+                        'customActionStatus' => 'danger'
                     ];
                     break;
             }
@@ -109,7 +109,7 @@ class DummyClass extends BaseAdminController
     }
 
     /**
-     * Update page status
+     * Update status
      * @param $id
      * @param $status
      * @return \Illuminate\Http\JsonResponse
@@ -119,6 +119,7 @@ class DummyClass extends BaseAdminController
         $data = [
             'status' => $status
         ];
+        $result = $this->repository->update($id, $data);
         $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
         $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
         return response()->json(response_with_messages($msg, !$result, $code), $code);
@@ -164,7 +165,7 @@ class DummyClass extends BaseAdminController
         }
 
         if ($this->request->has('_continue_edit')) {
-            return redirect()->to(route('admin::your-module.edit.get', ['id' => $result['data']->id]));
+            return redirect()->to(route('admin::your-module.edit.get', ['id' => $result]));
         }
 
         return redirect()->to(route('admin::your-module.index.get'));

@@ -59,7 +59,7 @@ class MakeRepository extends AbstractGenerator
          */
         $this->buildStep = 'make-contract';
         $contractName = 'Contracts/' . get_file_name($path, '.php');
-        $contractPath = get_base_folder($path) . $contractName . 'RepositoryContract.php';
+        $contractPath = get_base_folder($path) . $contractName . 'Contract.php';
 
         $this->makeDirectory($contractPath);
 

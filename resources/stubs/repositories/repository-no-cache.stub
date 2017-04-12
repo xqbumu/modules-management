@@ -9,7 +9,7 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
 {
     /**
      * @param array $data
-     * @return array
+     * @return int
      */
     public function createDummyClass(array $data)
     {
@@ -19,7 +19,7 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
     /**
      * @param int|null|BaseModelContract $id
      * @param array $data
-     * @return array
+     * @return int
      */
     public function createOrUpdateDummyClass($id, array $data)
     {
@@ -29,7 +29,7 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
     /**
      * @param int|null|BaseModelContract $id
      * @param array $data
-     * @return array
+     * @return int
      */
     public function updateDummyClass($id, array $data)
     {
@@ -38,7 +38,7 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
 
     /**
      * @param int|BaseModelContract|array $id
-     * @return array
+     * @return bool
      */
     public function deleteDummyClass($id)
     {
