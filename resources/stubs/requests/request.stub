@@ -4,13 +4,10 @@ use WebEd\Base\Http\Requests\Request;
 
 class DummyClass extends Request
 {
-    public $rules = [
-
-    ];
-
-    public function authorize()
+    public function rules()
     {
-        //return $this->user()->hasPermission('edit-page');
-        return true;
+        return [
+
+        ];
     }
 }

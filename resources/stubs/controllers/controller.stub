@@ -86,7 +86,11 @@ class DummyClass extends BaseAdminController
                     /**
                      * Delete items
                      */
-                    $result = $this->repository->delete($ids);
+                     $ids = do_filter(BASE_FILTER_BEFORE_DELETE, $ids, '{alias}');
+
+                     $result = $this->repository->delete($ids);
+
+                     do_action(BASE_ACTION_AFTER_DELETE, '{alias}', $ids, $result);
                     break;
                 case 'activated':
                 case 'disabled':
@@ -212,7 +216,7 @@ class DummyClass extends BaseAdminController
 
         if (!$item) {
             flash_messages()
-                ->addMessages(trans('{alias}::base.item_not_exists'), 'danger')
+                ->addMessages(trans('webed-core::base.item_not_exists'), 'danger')
                 ->showMessagesOnSession();
 
             return redirect()->back();

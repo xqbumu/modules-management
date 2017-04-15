@@ -14,10 +14,9 @@ class BootstrapModuleMiddleware
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure $next
-     * @param  array|string $params
      * @return mixed
      */
-    public function handle($request, Closure $next, ...$params)
+    public function handle($request, Closure $next)
     {
         /**
          * Register to dashboard menu
