@@ -32,7 +32,7 @@ class ModuleProvider extends ServiceProvider
         ], 'config');
         $this->publishes([
             __DIR__ . '/../../resources/themes' => base_path(),
-        ], 'public-assets');
+        ], 'webed-public-assets');
 
         app()->booted(function () {
             $this->app->register(BootstrapModuleServiceProvider::class);
