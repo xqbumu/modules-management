@@ -21,7 +21,7 @@ class BootstrapModuleMiddleware
         /**
          * Register to dashboard menu
          */
-        /*\DashboardMenu::registerItem([
+        /*dashboard_menu()->registerItem([
             'id' => 'DummyAlias',
             'priority' => 20,
             'parent_id' => null,

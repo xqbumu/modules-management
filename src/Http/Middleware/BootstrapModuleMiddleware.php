@@ -18,7 +18,7 @@ class BootstrapModuleMiddleware
      */
     public function handle($request, Closure $next)
     {
-        \DashboardMenu::registerItem([
+        dashboard_menu()->registerItem([
             'id' => 'webed-plugins',
             'priority' => 1001,
             'parent_id' => null,
