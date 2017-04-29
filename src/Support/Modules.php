@@ -103,8 +103,8 @@ class Modules
     {
         $modules = get_folders_in_path(base_path('vendor/sgsoft-studio'));
         $modulesArr = [];
-        foreach ($modules as $row) {
-            $file = $row . '/module.json';
+        foreach ($modules as $module) {
+            $file = $module . '/module.json';
             $data = json_decode(get_file_data($file), true);
             if ($data === null || !is_array($data)) {
                 continue;
