@@ -151,9 +151,10 @@ class DummyClass extends BaseAdminController
     {
         do_action(BASE_ACTION_BEFORE_CREATE, '{alias}', 'create.post');
 
+        $data = $request->all();
         $data['created_by'] = $this->loggedInUser->id;
 
-        $result = $this->repository->create($request->all());
+        $result = $this->repository->create($data);
 
         do_action(BASE_ACTION_AFTER_CREATE, '{alias}', $result);
 
@@ -185,7 +186,7 @@ class DummyClass extends BaseAdminController
 
         if (!$item) {
             flash_messages()
-                ->addMessages(trans('{alias}::base.item_not_exists'), 'danger')
+                ->addMessages(trans('webed-core::base.item_not_exists'), 'danger')
                 ->showMessagesOnSession();
 
             return redirect()->back();
@@ -224,7 +225,10 @@ class DummyClass extends BaseAdminController
 
         $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, '{alias}', 'edit.post');
 
-        $result = $this->repository->update($item, $request->all());
+        $data = $request->all();
+        $data['updated_by'] = $this->loggedInUser->id;
+
+        $result = $this->repository->update($item, $data);
 
         do_action(BASE_ACTION_AFTER_UPDATE, '{alias}', $id, $result);
 
