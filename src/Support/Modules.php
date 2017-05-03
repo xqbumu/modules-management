@@ -112,7 +112,7 @@ class Modules
 
             $modulesArr[array_get($data, 'namespace')] = array_merge($data, [
                 'file' => $file,
-                'type' => 'base',
+                'type' => 'core',
             ]);
         }
         return $modulesArr;
