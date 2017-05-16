@@ -25,11 +25,11 @@ class UpdateModuleServiceProvider extends ServiceProvider
     {
         register_module_update_batches('webed-modules-management', [
 
-        ]);
+        ], 'core');
     }
 
     protected function booted()
     {
-        load_module_update_batches('webed-modules-management');
+        load_module_update_batches('webed-modules-management', 'core');
     }
 }

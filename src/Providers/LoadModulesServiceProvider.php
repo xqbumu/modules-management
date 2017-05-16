@@ -14,7 +14,7 @@ class LoadModulesServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        foreach (modules_management()->getAllModulesInformation()->where('type', '=', 'plugins') as $module) {
+        foreach (get_plugin() as $module) {
             if (array_get($module, 'enabled', null) === true) {
                 /**
                  * Register module

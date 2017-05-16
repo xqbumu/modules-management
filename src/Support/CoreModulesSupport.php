@@ -1,0 +1,196 @@
+<?php namespace WebEd\Base\ModulesManagement\Support;
+
+use Illuminate\Support\Collection;
+use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModulesRepositoryContract;
+use WebEd\Base\ModulesManagement\Repositories\CoreModulesRepository;
+use Illuminate\Support\Facades\File;
+
+class CoreModulesSupport
+{
+    /**
+     * @var Collection
+     */
+    protected $modules;
+
+    /**
+     * @var CoreModulesRepository
+     */
+    protected $coreModulesRepository;
+
+    public function __construct(CoreModulesRepositoryContract $coreModulesRepository)
+    {
+        $this->coreModulesRepository = $coreModulesRepository;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAllModules()
+    {
+        if ($this->modules) {
+            return $this->modules;
+        }
+
+        $modulesArr = [];
+
+        $modules = get_folders_in_path(webed_core_path());
+
+        foreach ($modules as $row) {
+            $file = $row . '/module.json';
+            $data = json_decode(get_file_data($file), true);
+            if ($data === null || !is_array($data)) {
+                continue;
+            }
+
+            $modulesArr[array_get($data, 'namespace')] = array_merge($data, [
+                'file' => $file,
+            ]);
+        }
+
+        $this->modules = collect(array_merge($this->getBaseVendorModules(), $modulesArr));
+        return $this->modules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBaseVendorModules()
+    {
+        $modules = get_folders_in_path(base_path('vendor/sgsoft-studio'));
+
+        $canAccessDB = true;
+        if (app()->runningInConsole()) {
+            if (!check_db_connection() || !\Schema::hasTable('core_modules')) {
+                $canAccessDB = false;
+            }
+        }
+
+        if ($canAccessDB) {
+            $plugins = $this->coreModulesRepository->get();
+        }
+
+        $modulesArr = [];
+        foreach ($modules as $module) {
+            $file = $module . '/module.json';
+            $data = json_decode(get_file_data($file), true);
+            if ($data === null || !is_array($data)) {
+                continue;
+            }
+
+            if ($canAccessDB) {
+                $plugin = $plugins->where('alias', '=', array_get($data, 'alias'))->first();
+
+                if (!$plugin) {
+                    $result = $this->coreModulesRepository
+                        ->create([
+                            'alias' => array_get($data, 'alias'),
+                            'installed_version' => get_core_module_composer_version($data['repos']),
+                        ]);
+                    /**
+                     * Everything ok
+                     */
+                    if ($result) {
+                        $plugin = $this->coreModulesRepository->find($result);
+                    }
+                }
+                if ($plugin) {
+                    $data['id'] = $plugin->id;
+                    $data['installed_version'] = $plugin->installed_version;
+                }
+            }
+
+            $modulesArr[array_get($data, 'namespace')] = array_merge($data, [
+                'file' => $file,
+            ]);
+        }
+        return $modulesArr;
+    }
+
+    /**
+     * @param $alias
+     * @return mixed
+     */
+    public function findByAlias($alias)
+    {
+        if (!$this->modules) {
+            $this->getAllModules();
+        }
+
+        return $this->modules
+            ->where('alias', '=', $alias)
+            ->first();
+    }
+
+    /**
+     * @param $alias
+     * @param array $data
+     * @return bool
+     */
+    public function saveModule($alias, array $data)
+    {
+        $module = is_array($alias) ? $alias : $this->findByAlias($alias);
+        if (!$module) {
+            return false;
+        }
+
+        return $this->coreModulesRepository
+            ->createOrUpdate(array_get($module, 'id'), array_merge($data, [
+                'alias' => array_get($module, 'alias'),
+            ]));
+    }
+
+    /**
+     * @param $alias
+     * @param bool $isMoved
+     * @return $this
+     */
+    public function modifyComposerAutoload($alias, $isMoved = false)
+    {
+        $module = $this->findByAlias($alias);
+        if (!$module) {
+            return $this;
+        }
+        $moduleAutoloadType = array_get($module, 'autoload', 'psr-4');
+        $relativePath = str_replace(base_path() . '/', '', str_replace('module.json', '', array_get($module, 'file', ''))) . 'src';
+
+        $moduleNamespace = array_get($module, 'namespace');
+
+        if (!$moduleNamespace) {
+            return $this;
+        }
+
+        if (substr($moduleNamespace, -1) !== '\\') {
+            $moduleNamespace .= '\\';
+        }
+
+        /**
+         * Composer information
+         */
+        $composerContent = json_decode(File::get(base_path('composer.json')), true);
+        $autoload = array_get($composerContent, 'autoload', []);
+
+        if (!array_get($autoload, $moduleAutoloadType)) {
+            $autoload[$moduleAutoloadType] = [];
+        }
+
+        if (!$isMoved) {
+            if (isset($autoload[$moduleAutoloadType][$moduleNamespace])) {
+                unset($autoload[$moduleAutoloadType][$moduleNamespace]);
+            }
+        } else {
+            if ($moduleAutoloadType === 'classmap') {
+                $autoload[$moduleAutoloadType][] = $relativePath;
+            } else {
+                $autoload[$moduleAutoloadType][$moduleNamespace] = $relativePath;
+            }
+        }
+        $composerContent['autoload'] = $autoload;
+
+        /**
+         * Save file
+         */
+        File::put(base_path('composer.json'), json_encode_prettify($composerContent));
+
+        return $this;
+    }
+}

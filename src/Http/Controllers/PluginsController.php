@@ -1,10 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\Controllers;
 
 use WebEd\Base\Http\Controllers\BaseAdminController;
-use WebEd\Base\Support\DataTable\DataTables;
 use WebEd\Base\ModulesManagement\Http\DataTables\PluginsListDataTable;
-use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
-use WebEd\Base\ModulesManagement\Repositories\PluginsRepository;
 use Illuminate\Support\Facades\Artisan;
 use Yajra\Datatables\Engines\BaseEngine;
 
@@ -13,16 +10,6 @@ class PluginsController extends BaseAdminController
     protected $module = 'webed-modules-management';
 
     protected $dashboardMenuId = 'webed-plugins';
-
-    /**
-     * @param PluginsRepository $repository
-     */
-    public function __construct(PluginsRepositoryContract $repository)
-    {
-        parent::__construct();
-
-        $this->repository = $repository;
-    }
 
     /**
      * Get index page
@@ -55,17 +42,19 @@ class PluginsController extends BaseAdminController
     {
         switch ((bool)$status) {
             case true:
-                return modules_management()->enableModule($module)->refreshComposerAutoload();
+                webed_plugins()->enableModule($module);
+                return modules_management()->refreshComposerAutoload();
                 break;
             default:
-                return modules_management()->disableModule($module)->refreshComposerAutoload();
+                webed_plugins()->disableModule($module);
+                return modules_management()->refreshComposerAutoload();
                 break;
         }
     }
 
     public function postInstall($alias)
     {
-        $module = get_module_information($alias);
+        $module = get_plugin($alias);
 
         if(!$module) {
             return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
@@ -80,13 +69,13 @@ class PluginsController extends BaseAdminController
 
     public function postUpdate($alias)
     {
-        $module = get_module_information($alias);
+        $module = get_plugin($alias);
 
         if(!$module) {
             return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
-        Artisan::call('module:update', [
+        Artisan::call('plugin:update', [
             'alias' => $alias
         ]);
 
@@ -95,7 +84,7 @@ class PluginsController extends BaseAdminController
 
     public function postUninstall($alias)
     {
-        $module = get_module_information($alias);
+        $module = get_plugin($alias);
 
         if(!$module) {
             return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);

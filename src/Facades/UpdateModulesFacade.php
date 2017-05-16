@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Facade;
 use WebEd\Base\ModulesManagement\Support\UpdateModulesSupport;
 
 /**
- * @method static registerUpdateBatches($moduleAlias, array $batches)
- * @method static loadBatches($moduleAlias)
+ * @method static registerUpdateBatches($moduleAlias, array $batches, string $type = 'plugins')
+ * @method static loadBatches($moduleAlias, string $type = 'plugins')
  */
 class UpdateModulesFacade extends Facade
 {

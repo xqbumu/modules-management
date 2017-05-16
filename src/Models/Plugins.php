@@ -16,7 +16,7 @@ class Plugins extends BaseModel implements PluginsModelContract
         'installed',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function setEnabledAttribute($value)
     {

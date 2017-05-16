@@ -19,6 +19,8 @@ return [
     'uninstall_this_plugin' => 'Uninstall this plugin',
     'update_this_plugin' => 'Update this plugin',
 
+    'update_this_module' => 'Update this module',
+
     'author' => 'Author',
     'version' => 'Version',
     'installed_version' => 'Installed version',

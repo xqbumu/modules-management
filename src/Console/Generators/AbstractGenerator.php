@@ -10,48 +10,24 @@ abstract class AbstractGenerator extends BaseAbstractGenerator
     protected $moduleInformation;
 
     /**
+     * Current module information
+     * @return array
+     */
+    abstract protected function getCurrentModule();
+
+    /**
      * Get root folder of every modules by module type
-     * @param array $type
      * @return string
      */
-    protected function resolveModuleRootFolder($module)
+    protected function resolveModuleRootFolder()
     {
-        switch (array_get($module, 'type')) {
-            case 'core':
-                $path = webed_base_path();
-                break;
-            case 'plugin':
-            default:
-                $path = webed_plugins_path();
-                break;
-        }
+        $path = webed_plugins_path();
+
         if (!ends_with('/', $path)) {
             $path .= '/';
         }
 
         return $path;
-    }
-
-    /**
-     * Current module information
-     * @return array
-     */
-    protected function getCurrentModule()
-    {
-        $alias = $this->argument('alias');
-
-        $module = get_module_information($alias);
-
-        if(!$module) {
-            $this->error('Module not exists');
-            die();
-        }
-
-        $moduleRootFolder = $this->resolveModuleRootFolder($module);
-
-        return $this->moduleInformation = array_merge($module, [
-            'module-path' => $moduleRootFolder . basename(str_replace('/module.json', '', $module['file'])) . '/'
-        ]);
     }
 
     /**

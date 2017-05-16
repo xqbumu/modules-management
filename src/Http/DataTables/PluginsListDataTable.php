@@ -11,7 +11,7 @@ class PluginsListDataTable extends AbstractDataTables
 
     public function __construct()
     {
-        $this->repository = modules_management()->export('plugins');
+        $this->repository = get_plugin();
     }
 
     /**

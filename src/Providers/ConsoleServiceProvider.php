@@ -28,35 +28,59 @@ class ConsoleServiceProvider extends ServiceProvider
     protected function generatorCommands()
     {
         $this->commands([
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeModule::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeProvider::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeController::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeMiddleware::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeRequest::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeModel::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeRepository::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeFacade::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeService::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeSupport::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeView::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeMigration::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeDataTable::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeCriteria::class,
-            \WebEd\Base\ModulesManagement\Console\Generators\MakeAction::class,
+            /**
+             * Core
+             */
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeModule::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeProvider::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeController::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeMiddleware::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeRequest::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeModel::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeRepository::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeFacade::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeService::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeSupport::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeView::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeMigration::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeDataTable::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeCriteria::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeAction::class,
+            /**
+             * Plugin
+             */
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeProvider::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeController::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeMiddleware::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeRequest::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeModel::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeRepository::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeFacade::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeService::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeSupport::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeView::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeMigration::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeDataTable::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeCriteria::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeAction::class,
         ]);
     }
 
     protected function otherCommands()
     {
         $this->commands([
-            \WebEd\Base\ModulesManagement\Console\Commands\InstallModuleCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Commands\UpdateModuleCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Commands\UninstallModuleCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Commands\DisableModuleCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Commands\EnableModuleCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Commands\ExportModuleCommand::class,
-            \WebEd\Base\ModulesManagement\Console\Commands\GetAllModulesCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\InstallPluginCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\UpdatePluginCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\UninstallPluginCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\DisablePluginCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\EnablePluginCommand::class,
+
+            \WebEd\Base\ModulesManagement\Console\Commands\UpdateCoreModuleCommand::class,
+
+            \WebEd\Base\ModulesManagement\Console\Commands\ExportCoreModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\GetAllCoreModulesCommand::class,
         ]);
     }
 }

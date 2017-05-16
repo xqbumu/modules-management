@@ -29,11 +29,11 @@ class UpdateModuleServiceProvider extends ServiceProvider
     {
         register_module_update_batches($this->moduleAlias, [
             //'2.1.4' => __DIR__ . '/../../update-batches/2.1.4.php',
-        ]);
+        ], 'DummyType');
     }
 
     protected function booted()
     {
-        load_module_update_batches($this->moduleAlias);
+        load_module_update_batches($this->moduleAlias, 'DummyType');
     }
 }
