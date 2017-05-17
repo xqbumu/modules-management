@@ -25,4 +25,11 @@ return [
     'core_module_not_exists' => 'Mô đun không tồn tại',
     'core_module_not_found' => 'Không tìm thấy mô đun',
     'core_module_updated' => 'Mô đun đã được cập nhật',
+
+    'update' => [
+        'our_system' => 'Hệ thống hiện tại có',
+        'modules' => 'mô đun cần được cập nhật',
+        'press' => 'Vui lòng nhấn',
+        'link' => 'Cập nhật',
+    ],
 ];

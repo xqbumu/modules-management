@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Support;
 
 use Illuminate\Support\Collection;
+use WebEd\Base\Models\EloquentBase;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModulesRepositoryContract;
 use WebEd\Base\ModulesManagement\Repositories\CoreModulesRepository;
 use Illuminate\Support\Facades\File;
@@ -17,6 +18,11 @@ class CoreModulesSupport
      */
     protected $coreModulesRepository;
 
+    /**
+     * @var Collection
+     */
+    protected $modulesInDb;
+
     public function __construct(CoreModulesRepositoryContract $coreModulesRepository)
     {
         $this->coreModulesRepository = $coreModulesRepository;
@@ -31,6 +37,8 @@ class CoreModulesSupport
             return $this->modules;
         }
 
+        $canAccessDB = $this->checkConnection();
+
         $modulesArr = [];
 
         $modules = get_folders_in_path(webed_core_path());
@@ -40,6 +48,27 @@ class CoreModulesSupport
             $data = json_decode(get_file_data($file), true);
             if ($data === null || !is_array($data)) {
                 continue;
+            }
+
+            if ($canAccessDB) {
+                $plugin = $this->fetchFromDb($data['alias']);
+
+                if (!$plugin) {
+                    $result = $this->coreModulesRepository
+                        ->create([
+                            'alias' => array_get($data, 'alias'),
+                            'installed_version' => get_core_module_composer_version($data['repos']),
+                        ]);
+
+                    if ($result) {
+                        $plugin = $this->coreModulesRepository->find($result);
+                    }
+                }
+
+                if ($plugin) {
+                    $data['id'] = $plugin->id;
+                    $data['installed_version'] = $plugin->installed_version;
+                }
             }
 
             $modulesArr[array_get($data, 'namespace')] = array_merge($data, [
@@ -58,16 +87,7 @@ class CoreModulesSupport
     {
         $modules = get_folders_in_path(base_path('vendor/sgsoft-studio'));
 
-        $canAccessDB = true;
-        if (app()->runningInConsole()) {
-            if (!check_db_connection() || !\Schema::hasTable('core_modules')) {
-                $canAccessDB = false;
-            }
-        }
-
-        if ($canAccessDB) {
-            $plugins = $this->coreModulesRepository->get();
-        }
+        $canAccessDB = $this->checkConnection();
 
         $modulesArr = [];
         foreach ($modules as $module) {
@@ -78,7 +98,7 @@ class CoreModulesSupport
             }
 
             if ($canAccessDB) {
-                $plugin = $plugins->where('alias', '=', array_get($data, 'alias'))->first();
+                $plugin = $this->fetchFromDb($data['alias']);
 
                 if (!$plugin) {
                     $result = $this->coreModulesRepository
@@ -86,13 +106,12 @@ class CoreModulesSupport
                             'alias' => array_get($data, 'alias'),
                             'installed_version' => get_core_module_composer_version($data['repos']),
                         ]);
-                    /**
-                     * Everything ok
-                     */
+
                     if ($result) {
                         $plugin = $this->coreModulesRepository->find($result);
                     }
                 }
+
                 if ($plugin) {
                     $data['id'] = $plugin->id;
                     $data['installed_version'] = $plugin->installed_version;
@@ -192,5 +211,37 @@ class CoreModulesSupport
         File::put(base_path('composer.json'), json_encode_prettify($composerContent));
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function checkConnection()
+    {
+        if (app()->runningInConsole()) {
+            if (!check_db_connection() || !\Schema::hasTable('core_modules')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param null $alias
+     * @return Collection|EloquentBase
+     */
+    protected function fetchFromDb($alias = null)
+    {
+        if (!$this->modulesInDb) {
+            $this->modulesInDb = $this->coreModulesRepository->get();
+        }
+
+        if (!$alias) {
+            return $this->modulesInDb;
+        }
+
+        return $this->modulesInDb
+            ->where('alias', '=', $alias)
+            ->first();
     }
 }

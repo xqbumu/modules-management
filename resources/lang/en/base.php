@@ -25,4 +25,11 @@ return [
     'core_module_not_exists' => 'Core module not exists',
     'core_module_not_found' => 'Core module not found: ',
     'core_module_updated' => 'Core module updated',
+
+    'update' => [
+        'our_system' => 'Our system has',
+        'modules' => 'module(s) need to update',
+        'press' => 'Please press',
+        'link' => 'Update',
+    ],
 ];

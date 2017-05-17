@@ -22,19 +22,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PluginsRepositoryContract::class, function () {
             $repository = new PluginsRepository(new Plugins());
 
-            if (config('webed-caching.repository.enabled')) {
-                return new PluginsRepositoryCacheDecorator($repository);
-            }
-
             return $repository;
         });
 
         $this->app->bind(CoreModulesRepositoryContract::class, function () {
             $repository = new CoreModulesRepository(new CoreModules());
-
-            if (config('webed-caching.repository.enabled')) {
-                return new CoreModulesRepositoryCacheDecorator($repository);
-            }
 
             return $repository;
         });

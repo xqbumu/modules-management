@@ -68,7 +68,7 @@ class CoreModulesListDataTable extends AbstractDataTables
                 return array_get($item, 'description') . '<br><br>'
                     . trans('webed-modules-management::datatables.author') . ': <b>' . array_get($item, 'author') . '</b><br>'
                     . trans('webed-modules-management::datatables.version') . ': <b>' . get_core_module_composer_version(array_get($item, 'repos')) . '</b><br>'
-                    . trans('webed-modules-management::datatables.installed_version') . ': <b>' . (array_get($item, 'installed_version', '...') ?: '...') . '</b>';
+                    . trans('webed-modules-management::datatables.installed_version') . ': <b>' . (array_get($item, 'installed_version', '...')) . '</b>';
             })
             ->addColumn('actions', function ($item) {
                 $updateBtn = version_compare(array_get($item, 'installed_version'), get_core_module_composer_version(array_get($item, 'repos')), '<')
