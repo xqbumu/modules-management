@@ -60,7 +60,7 @@ class PluginsController extends BaseAdminController
             return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
-        Artisan::call('module:install', [
+        Artisan::call('plugin:install', [
             'alias' => $alias
         ]);
 
@@ -90,7 +90,7 @@ class PluginsController extends BaseAdminController
             return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
-        Artisan::call('module:uninstall', [
+        Artisan::call('plugin:uninstall', [
             'alias' => $alias
         ]);
 
