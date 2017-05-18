@@ -34,7 +34,12 @@ class UpdateModulesSupport
      */
     public function loadBatches($moduleAlias, $type = 'plugins')
     {
-        $currentModuleInformation = get_plugin($moduleAlias);
+        if ($type == 'plugins') {
+            $currentModuleInformation = get_plugin($moduleAlias);
+        } else {
+            $currentModuleInformation = get_core_module($moduleAlias);
+        }
+
         if (!$currentModuleInformation) {
             return $this;
         }
@@ -42,7 +47,7 @@ class UpdateModulesSupport
         ksort($this->batches[$type]);
 
         $installedModuleVersion = array_get($currentModuleInformation, 'installed_version');
-        foreach ($this->batches[$moduleAlias] as $version => $batch) {
+        foreach ($this->batches[$type][$moduleAlias] as $version => $batch) {
             if (!$installedModuleVersion || version_compare($version, $installedModuleVersion, '>')) {
                 require $batch;
             }
