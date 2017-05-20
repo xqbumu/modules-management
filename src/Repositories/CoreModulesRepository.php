@@ -2,15 +2,10 @@
 
 use WebEd\Base\Models\Contracts\BaseModelContract;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
-use WebEd\Base\Caching\Services\Traits\Cacheable;
-use WebEd\Base\Caching\Services\Contracts\CacheableContract;
-
 use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModulesRepositoryContract;
 
-class CoreModulesRepository extends EloquentBaseRepository implements CoreModulesRepositoryContract, CacheableContract
+class CoreModulesRepository extends EloquentBaseRepository implements CoreModulesRepositoryContract
 {
-    use Cacheable;
-
     /**
      * @param array $data
      * @return int

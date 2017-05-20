@@ -1,14 +1,10 @@
 <?php namespace WebEd\Base\ModulesManagement\Repositories;
 
-use WebEd\Base\Caching\Services\Contracts\CacheableContract;
-use WebEd\Base\Caching\Services\Traits\Cacheable;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 
-class PluginsRepository extends EloquentBaseRepository implements PluginsRepositoryContract, CacheableContract
+class PluginsRepository extends EloquentBaseRepository implements PluginsRepositoryContract
 {
-    use Cacheable;
-
     /**
      * @param $alias
      * @return mixed|null

@@ -34,7 +34,7 @@ class MakeModule extends Command
      * @var array
      */
     protected $acceptedTypes = [
-        'core' => 'Core',
+        'core' => 'Base',
         'plugins' => 'Plugins',
     ];
 
