@@ -70,6 +70,7 @@ class UninstallPluginCommand extends Command
             'installed' => false,
             'installed_version' => '',
         ]);
+        \Artisan::call('cache:clear');
         $this->line('Uninstalled');
     }
 }

@@ -96,6 +96,7 @@ class InstallPluginCommand extends Command
             'installed' => true,
             'installed_version' => array_get($module, 'version'),
         ]);
+        \Artisan::call('cache:clear');
         $this->line('Installed');
     }
 

@@ -67,8 +67,6 @@ class DisablePluginCommand extends Command
             }
         }
 
-        echo PHP_EOL;
-
         modules_management()->refreshComposerAutoload();
 
         $this->info("\n$count module(s) disabled successfully.");

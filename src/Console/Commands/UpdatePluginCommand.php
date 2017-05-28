@@ -59,13 +59,6 @@ class UpdatePluginCommand extends Command
 
         $this->registerUpdateModuleService($module);
 
-        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
-        \Artisan::call('vendor:publish', [
-            '--provider' => $moduleProvider,
-            '--tag' => 'webed-public-assets',
-            '--force' => true
-        ]);
-
         $this->info("\nPlugin " . $this->argument('alias') . " has been updated.");
     }
 
@@ -81,6 +74,15 @@ class UpdatePluginCommand extends Command
         webed_plugins()->savePlugin($module, [
             'installed_version' => array_get($module, 'version'),
         ]);
+
+        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
+        \Artisan::call('vendor:publish', [
+            '--provider' => $moduleProvider,
+            '--tag' => 'webed-public-assets',
+            '--force' => true
+        ]);
+
+        \Artisan::call('cache:clear');
 
         $this->line('Your plugin has been updated');
     }

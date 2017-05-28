@@ -82,6 +82,8 @@ class UpdateCoreModuleCommand extends Command
             '--force' => true
         ]);
 
+        \Artisan::call('cache:clear');
+
         $this->line('Your module has been updated');
     }
 }
