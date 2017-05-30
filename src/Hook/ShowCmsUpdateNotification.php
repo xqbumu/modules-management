@@ -12,6 +12,10 @@ class ShowCmsUpdateNotification
 
     public function handle()
     {
+        if (!is_admin_panel()) {
+            return;
+        }
+
         $needToUpdate = 0;
         foreach ($this->modules as $module) {
             if (
