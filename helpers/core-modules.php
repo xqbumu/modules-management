@@ -16,7 +16,7 @@ if (!function_exists('webed_core_modules')) {
 if (!function_exists('get_core_module')) {
     /**
      * @param string
-     * @return Collection
+     * @return Collection|array
      */
     function get_core_module($alias = null)
     {
