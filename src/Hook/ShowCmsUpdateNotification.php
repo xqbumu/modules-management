@@ -19,8 +19,8 @@ class ShowCmsUpdateNotification
         $needToUpdate = 0;
         foreach ($this->modules as $module) {
             if (
-                get_core_module_composer_version(array_get($module, 'repos')) === array_get($module, 'installed_version')
-                || !module_version_compare(get_core_module_composer_version(array_get($module, 'repos')), '^' . array_get($module, 'installed_version', 0))
+                get_core_module_version($module['alias']) === array_get($module, 'installed_version')
+                || !module_version_compare(get_core_module_version($module['alias']), '^' . array_get($module, 'installed_version', 0))
             ) {
                 continue;
             }
