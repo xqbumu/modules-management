@@ -57,7 +57,6 @@ class CoreModulesSupport
                     $result = $this->coreModulesRepository
                         ->create([
                             'alias' => array_get($data, 'alias'),
-                            'installed_version' => get_core_module_composer_version($data['repos']),
                         ]);
 
                     if ($result) {
@@ -104,7 +103,6 @@ class CoreModulesSupport
                     $result = $this->coreModulesRepository
                         ->create([
                             'alias' => array_get($data, 'alias'),
-                            'installed_version' => get_core_module_composer_version($data['repos']),
                         ]);
 
                     if ($result) {

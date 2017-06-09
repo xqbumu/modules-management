@@ -69,8 +69,18 @@ class ExportCoreModuleCommand extends Command
         $relativePath = str_replace(base_path('vendor/sgsoft-studio/'), '', $moduleVendorPath);
 
         try {
-            $this->files->makeDirectory(webed_core_path($relativePath), 755, false, true);
-            $this->files->copyDirectory($moduleVendorPath, webed_core_path($relativePath), null);
+            if ($this->files->exists(webed_core_path($relativePath))) {
+                $this->files->deleteDirectory(webed_core_path($relativePath));
+            }
+            $this->files->copyDirectory($moduleVendorPath, webed_core_path($relativePath));
+
+            $moduleJsonFile = webed_core_path($relativePath) . 'module.json';
+
+            $moduleJson = json_decode(file_get_contents($moduleJsonFile), true);
+
+            $moduleJson['version'] = isset($moduleJson['version']) ? $moduleJson['version'] : get_core_module_composer_version($moduleJson['repos']);
+
+            file_put_contents($moduleJsonFile, json_encode_prettify($moduleJson));
 
             webed_core_modules()->modifyComposerAutoload(array_get($module, 'alias'), true);
 
