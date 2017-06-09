@@ -46,12 +46,15 @@ class CoreModulesSupport
         foreach ($modules as $row) {
             $file = $row . '/module.json';
             $data = json_decode(get_file_data($file), true);
+
             if ($data === null || !is_array($data)) {
                 continue;
             }
 
             if ($canAccessDB) {
-                $plugin = $this->fetchFromDb($data['alias']);
+                $plugin = $this->coreModulesRepository->findWhere([
+                    'alias' => $data['alias']
+                ]);
 
                 if (!$plugin) {
                     $result = $this->coreModulesRepository
@@ -76,6 +79,7 @@ class CoreModulesSupport
         }
 
         $this->modules = collect(array_merge($this->getBaseVendorModules(), $modulesArr));
+
         return $this->modules;
     }
 
@@ -97,7 +101,9 @@ class CoreModulesSupport
             }
 
             if ($canAccessDB) {
-                $plugin = $this->fetchFromDb($data['alias']);
+                $plugin = $this->coreModulesRepository->findWhere([
+                    'alias' => $data['alias']
+                ]);
 
                 if (!$plugin) {
                     $result = $this->coreModulesRepository
@@ -222,24 +228,5 @@ class CoreModulesSupport
             }
         }
         return true;
-    }
-
-    /**
-     * @param null $alias
-     * @return Collection|EloquentBase
-     */
-    protected function fetchFromDb($alias = null)
-    {
-        if (!$this->modulesInDb) {
-            $this->modulesInDb = $this->coreModulesRepository->get();
-        }
-
-        if (!$alias) {
-            return $this->modulesInDb;
-        }
-
-        return $this->modulesInDb
-            ->where('alias', '=', $alias)
-            ->first();
     }
 }
