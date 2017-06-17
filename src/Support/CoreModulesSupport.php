@@ -103,6 +103,10 @@ class CoreModulesSupport
                 continue;
             }
 
+            if (!array_get($data, 'version')) {
+                $data['version'] = get_core_module_composer_version($data['repos']);
+            }
+
             if ($canAccessDB) {
                 $plugin = $this->coreModulesRepository->findWhere([
                     'alias' => $data['alias']
