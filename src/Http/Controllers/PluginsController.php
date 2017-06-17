@@ -17,9 +17,9 @@ class PluginsController extends BaseAdminController
      */
     public function getIndex(PluginsListDataTable $dataTable)
     {
-        $this->breadcrumbs->addLink(trans('webed-modules-management::base.plugins'));
+        $this->breadcrumbs->addLink(trans($this->module . '::base.plugins'));
 
-        $this->setPageTitle(trans('webed-modules-management::base.plugins'));
+        $this->setPageTitle(trans($this->module . '::base.plugins'));
 
         $this->getDashboardMenu($this->dashboardMenuId);
 
@@ -57,14 +57,14 @@ class PluginsController extends BaseAdminController
         $module = get_plugin($alias);
 
         if(!$module) {
-            return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
+            return response_with_messages(trans($this->module . '::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('plugin:install', [
             'alias' => $alias
         ]);
 
-        return response_with_messages(trans('webed-modules-management::base.plugin_installed'));
+        return response_with_messages(trans($this->module . '::base.plugin_installed'));
     }
 
     public function postUpdate($alias)
@@ -72,14 +72,14 @@ class PluginsController extends BaseAdminController
         $module = get_plugin($alias);
 
         if(!$module) {
-            return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
+            return response_with_messages(trans($this->module . '::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('plugin:update', [
             'alias' => $alias
         ]);
 
-        return response_with_messages(trans('webed-modules-management::base.plugin_updated'));
+        return response_with_messages(trans($this->module . '::base.plugin_updated'));
     }
 
     public function postUninstall($alias)
@@ -87,13 +87,13 @@ class PluginsController extends BaseAdminController
         $module = get_plugin($alias);
 
         if(!$module) {
-            return response_with_messages(trans('webed-modules-management::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
+            return response_with_messages(trans($this->module . '::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('plugin:uninstall', [
             'alias' => $alias
         ]);
 
-        return response_with_messages(trans('webed-modules-management::base.plugin_uninstalled'));
+        return response_with_messages(trans($this->module . '::base.plugin_uninstalled'));
     }
 }

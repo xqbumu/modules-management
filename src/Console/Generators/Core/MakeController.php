@@ -37,7 +37,7 @@ class MakeController extends AbstractCoreGenerator
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'Http\\Controllers\\' . $this->argument('name');
+        return 'Http\\Controllers\\' . $this->argument('name') . 'Controller';
     }
 
     protected function replaceParameters(&$stub)

@@ -32,6 +32,6 @@ class MakeSupport extends AbstractCoreGenerator
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'Support\\' . $this->argument('name');
+        return 'Support\\' . $this->argument('name') . 'Support';
     }
 }

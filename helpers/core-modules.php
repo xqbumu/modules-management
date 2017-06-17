@@ -16,7 +16,7 @@ if (!function_exists('webed_core_modules')) {
 if (!function_exists('get_core_module')) {
     /**
      * @param string
-     * @return Collection|array
+     * @return Collection
      */
     function get_core_module($alias = null)
     {
@@ -24,21 +24,6 @@ if (!function_exists('get_core_module')) {
             return CoreModulesFacade::findByAlias($alias);
         }
         return CoreModulesFacade::getAllModules();
-    }
-}
-
-if (!function_exists('get_core_module_version')) {
-    /**
-     * @param string $alias
-     * @return string|null
-     */
-    function get_core_module_version($alias)
-    {
-        $module = get_core_module($alias);
-        if ($module) {
-            return array_get($module, 'version');
-        }
-        return null;
     }
 }
 

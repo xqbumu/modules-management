@@ -52,9 +52,11 @@ class CoreModulesSupport
             }
 
             if ($canAccessDB) {
-                $plugin = $this->coreModulesRepository->findWhere([
-                    'alias' => $data['alias']
-                ]);
+                if (!$this->modulesInDb) {
+                    $this->modulesInDb = $this->coreModulesRepository->get();
+                }
+
+                $plugin = $this->modulesInDb->where('alias', '=', $data['alias'])->first();
 
                 if (!$plugin) {
                     $result = $this->coreModulesRepository
@@ -64,6 +66,7 @@ class CoreModulesSupport
 
                     if ($result) {
                         $plugin = $this->coreModulesRepository->find($result);
+                        $this->modulesInDb->push($plugin);
                     }
                 }
 

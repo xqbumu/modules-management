@@ -17,9 +17,9 @@ class CoreModulesController extends BaseAdminController
      */
     public function getIndex(CoreModulesListDataTable $dataTable)
     {
-        $this->breadcrumbs->addLink(trans('webed-modules-management::base.plugins'));
+        $this->breadcrumbs->addLink(trans($this->module . '::base.plugins'));
 
-        $this->setPageTitle(trans('webed-modules-management::base.core_modules'));
+        $this->setPageTitle(trans($this->module . '::base.core_modules'));
 
         $this->getDashboardMenu($this->dashboardMenuId);
 
@@ -43,13 +43,13 @@ class CoreModulesController extends BaseAdminController
         $module = get_core_module($alias);
 
         if(!$module) {
-            return response_with_messages(trans('webed-modules-management::base.core_module_not_exists'), true, \Constants::ERROR_CODE);
+            return response_with_messages(trans($this->module . '::base.core_module_not_exists'), true, \Constants::ERROR_CODE);
         }
 
         Artisan::call('core:update', [
             'alias' => $alias
         ]);
 
-        return response_with_messages(trans('webed-modules-management::base.core_module_updated'));
+        return response_with_messages(trans($this->module . '::base.core_module_updated'));
     }
 }

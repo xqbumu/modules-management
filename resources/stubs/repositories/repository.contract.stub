@@ -26,7 +26,8 @@ interface DummyClassRepositoryContract
 
     /**
      * @param int|BaseModelContract|array $id
+     * @param bool $force
      * @return bool
      */
-    public function deleteDummyClass($id);
+    public function deleteDummyClass($id, $force = false);
 }

@@ -38,10 +38,11 @@ class DummyClassRepository extends EloquentBaseRepository implements DummyClassR
 
     /**
      * @param int|BaseModelContract|array $id
+     * @param bool $force
      * @return bool
      */
-    public function deleteDummyClass($id)
+    public function deleteDummyClass($id, $force = false)
     {
-        return $this->delete($id);
+        return $this->delete($id, $force);
     }
 }

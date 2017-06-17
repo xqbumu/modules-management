@@ -2,14 +2,14 @@
 
 use WebEd\Base\ModulesManagement\Console\Generators\AbstractCoreGenerator;
 
-class MakeMiddleware extends AbstractCoreGenerator
+class MakeMail extends AbstractCoreGenerator
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'core:make:middleware
+    protected $signature = 'core:make:mail
     	{alias : The alias of the module}
     	{name : The class name}';
 
@@ -18,7 +18,7 @@ class MakeMiddleware extends AbstractCoreGenerator
      *
      * @var string
      */
-    protected $type = 'Middleware';
+    protected $type = 'Mail';
 
     /**
      * Get the stub file for the generator.
@@ -27,11 +27,11 @@ class MakeMiddleware extends AbstractCoreGenerator
      */
     protected function getStub()
     {
-        return __DIR__ . '/../../../../resources/stubs/middleware/middleware.stub';
+        return __DIR__ . '/../../../../resources/stubs/mails/mail.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'Http\\Middleware\\' . $this->argument('name') . 'Middleware';
+        return 'Mails\\' . $this->argument('name') . 'Mail';
     }
 }

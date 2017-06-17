@@ -27,7 +27,7 @@ class DummyClass extends BaseAdminController
         $this->middleware(function (Request $request, $next) {
             $this->getDashboardMenu($this->module);
 
-            $this->breadcrumbs->addLink(trans('{alias}::base.page_title'), route('admin::your-module.index.get'));
+            $this->breadcrumbs->addLink(trans($this->module . '::base.page_title'), route('admin::your-module.index.get'));
 
             return $next($request);
         });
@@ -39,7 +39,7 @@ class DummyClass extends BaseAdminController
      */
     public function getIndex(YourDataTables $dataTables)
     {
-        $this->setPageTitle(trans('{alias}::base.page_title'));
+        $this->setPageTitle(trans($this->module . '::base.page_title'));
 
         $this->dis['dataTable'] = $dataTables->run();
 
@@ -141,8 +141,8 @@ class DummyClass extends BaseAdminController
                 'jquery-ckeditor'
             ]);
 
-        $this->setPageTitle(trans('{alias}::base.page_title'));
-        $this->breadcrumbs->addLink(trans('{alias}::base.page_title'));
+        $this->setPageTitle(trans($this->module . '::base.page_title'));
+        $this->breadcrumbs->addLink(trans($this->module . '::base.page_title'));
 
         return do_filter(BASE_FILTER_CONTROLLER, $this, '{alias}', 'create.get')->viewAdmin('create');
     }
@@ -199,8 +199,8 @@ class DummyClass extends BaseAdminController
                 'jquery-ckeditor'
             ]);
 
-        $this->setPageTitle(trans('{alias}::base.edit_item') . ' #' . $item->id);
-        $this->breadcrumbs->addLink(trans('{alias}::base.edit_item'));
+        $this->setPageTitle(trans($this->module . '::base.edit_item') . ' #' . $item->id);
+        $this->breadcrumbs->addLink(trans($this->module . '::base.edit_item'));
 
         $this->dis['object'] = $item;
 

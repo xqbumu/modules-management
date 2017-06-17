@@ -32,6 +32,6 @@ class MakeFacade extends AbstractCoreGenerator
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'Facades\\' . $this->argument('name');
+        return 'Facades\\' . $this->argument('name') . 'Facade';
     }
 }

@@ -32,6 +32,6 @@ class MakeService extends AbstractCoreGenerator
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'Services\\' . $this->argument('name');
+        return 'Services\\' . $this->argument('name') . 'Service';
     }
 }

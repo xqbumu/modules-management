@@ -18,6 +18,11 @@ class PluginsSupport
      */
     protected $pluginsRepository;
 
+    /**
+     * @var Collection
+     */
+    protected $pluginsInDb;
+
     public function __construct(PluginsRepositoryContract $pluginsRepository)
     {
         $this->pluginsRepository = $pluginsRepository;
@@ -41,10 +46,6 @@ class PluginsSupport
             }
         }
 
-        if ($canAccessDB) {
-            $plugins = $this->pluginsRepository->get();
-        }
-
         $modules = get_folders_in_path(webed_plugins_path());
 
         foreach ($modules as $row) {
@@ -55,7 +56,11 @@ class PluginsSupport
             }
 
             if ($canAccessDB) {
-                $plugin = $plugins->where('alias', '=', array_get($data, 'alias'))->first();
+                if (!$this->pluginsInDb) {
+                    $this->pluginsInDb = $this->pluginsRepository->get();
+                }
+
+                $plugin = $this->pluginsInDb->where('alias', '=', array_get($data, 'alias'))->first();
 
                 if (!$plugin) {
                     $result = $this->pluginsRepository
@@ -69,6 +74,7 @@ class PluginsSupport
                      */
                     if ($result) {
                         $plugin = $this->pluginsRepository->find($result);
+                        $this->pluginsInDb->push($plugin);
                     }
                 }
                 if ($plugin) {

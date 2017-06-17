@@ -32,6 +32,6 @@ class MakeCriteria extends AbstractCoreGenerator
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'Criterias\\' . $this->argument('name');
+        return 'Criterias\\' . $this->argument('name') . 'Criteria';
     }
 }
