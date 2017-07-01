@@ -3,6 +3,9 @@
 
 class ShowCmsUpdateNotification
 {
+    /**
+     * @var \Illuminate\Support\Collection
+     */
     protected $modules;
 
     public function __construct()
