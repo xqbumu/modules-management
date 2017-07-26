@@ -23,9 +23,22 @@ class CoreModulesSupport
      */
     protected $modulesInDb;
 
+    /**
+     * @var bool
+     */
+    protected $canAccessDb = false;
+
     public function __construct(CoreModulesRepositoryContract $coreModulesRepository)
     {
         $this->coreModulesRepository = $coreModulesRepository;
+
+        $this->canAccessDb = $this->checkConnection();
+
+        if ($this->canAccessDb) {
+            if (!$this->modulesInDb) {
+                $this->modulesInDb = $this->coreModulesRepository->get();
+            }
+        }
     }
 
     /**
@@ -36,8 +49,6 @@ class CoreModulesSupport
         if ($this->modules) {
             return $this->modules;
         }
-
-        $canAccessDB = $this->checkConnection();
 
         $modulesArr = [];
 
@@ -51,11 +62,7 @@ class CoreModulesSupport
                 continue;
             }
 
-            if ($canAccessDB) {
-                if (!$this->modulesInDb) {
-                    $this->modulesInDb = $this->coreModulesRepository->get();
-                }
-
+            if ($this->canAccessDb) {
                 $plugin = $this->modulesInDb->where('alias', '=', $data['alias'])->first();
 
                 if (!$plugin) {
@@ -93,8 +100,6 @@ class CoreModulesSupport
     {
         $modules = get_folders_in_path(base_path('vendor/sgsoft-studio'));
 
-        $canAccessDB = $this->checkConnection();
-
         $modulesArr = [];
         foreach ($modules as $module) {
             $file = $module . '/module.json';
@@ -107,10 +112,14 @@ class CoreModulesSupport
                 $data['version'] = get_core_module_composer_version($data['repos']);
             }
 
-            if ($canAccessDB) {
-                $plugin = $this->coreModulesRepository->findWhere([
-                    'alias' => $data['alias']
-                ]);
+            if ($this->canAccessDb) {
+                $plugin = $this->modulesInDb->where('alias', '=', $data['alias'])->first();
+
+                if (!$plugin) {
+                    $plugin = $this->coreModulesRepository->findWhere([
+                        'alias' => $data['alias']
+                    ]);
+                }
 
                 if (!$plugin) {
                     $result = $this->coreModulesRepository
