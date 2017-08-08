@@ -7,7 +7,7 @@ class RouteServiceProvider extends ServiceProvider
 {
     protected $namespace = 'DummyNamespace\Http\Controllers';
 
-    public function map()
+    public function boot()
     {
         Route::middleware('web')
             ->namespace($this->namespace)

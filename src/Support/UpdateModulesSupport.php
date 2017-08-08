@@ -44,8 +44,6 @@ class UpdateModulesSupport
             return $this;
         }
 
-        ksort($this->batches[$type]);
-
         $installedModuleVersion = array_get($currentModuleInformation, 'installed_version');
         foreach ($this->batches[$type][$moduleAlias] as $version => $batch) {
             if (!$installedModuleVersion || version_compare($version, $installedModuleVersion, '>')) {
