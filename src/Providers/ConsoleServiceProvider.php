@@ -85,6 +85,7 @@ class ConsoleServiceProvider extends ServiceProvider
 
             \WebEd\Base\ModulesManagement\Console\Commands\ExportCoreModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\GetAllCoreModulesCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\GetAllPluginsCommand::class,
         ]);
     }
 }
