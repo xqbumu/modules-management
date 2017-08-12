@@ -49,6 +49,7 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeAction::class,
             \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeMail::class,
             \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeViewComposer::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Core\MakeHook::class,
             /**
              * Plugin
              */
@@ -69,6 +70,7 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeAction::class,
             \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeMail::class,
             \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeViewComposer::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeHook::class,
         ]);
     }
 
