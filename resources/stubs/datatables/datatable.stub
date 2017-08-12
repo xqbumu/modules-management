@@ -1,17 +1,26 @@
 <?php namespace DummyNamespace;
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
+use WebEd\Base\Models\Contracts\BaseModelContract;
 use Yajra\Datatables\Engines\CollectionEngine;
 use Yajra\Datatables\Engines\EloquentEngine;
 use Yajra\Datatables\Engines\QueryBuilderEngine;
 
 class DummyClass extends AbstractDataTables
 {
+    /**
+     * @var BaseModelContract
+     */
     protected $model;
+
+    /**
+     * @var string
+     */
+    protected $screenName = '{alias}';
 
     public function __construct()
     {
-        $this->model = YourModel::select(['id', 'title', 'created_at']);
+        $this->model = do_filter(FRONT_FILTER_DATA_TABLES_MODEL, YourModel::select(['id', 'title', 'created_at']), $this->screenName);
     }
 
     public function headings()
@@ -22,7 +31,7 @@ class DummyClass extends AbstractDataTables
                 'width' => '5%',
             ],
             'title' => [
-                'title' => 'Title',
+                'title' => trans('webed-core::datatables.heading.title'),
                 'width' => '20%',
             ],
             'created_at' => [

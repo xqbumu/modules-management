@@ -34,4 +34,13 @@ class MakeDataTable extends AbstractCoreGenerator
     {
         return 'Http\\DataTables\\' . $this->argument('name') . 'DataTable';
     }
+
+    protected function replaceParameters(&$stub)
+    {
+        $stub = str_replace([
+            '{alias}',
+        ], [
+            $this->argument('alias'),
+        ], $stub);
+    }
 }
