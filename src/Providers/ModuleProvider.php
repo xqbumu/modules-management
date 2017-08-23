@@ -18,8 +18,6 @@ class ModuleProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'webed-modules-management');
         /*Load translations*/
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'webed-modules-management');
-        /*Load migrations*/
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         $this->publishes([
             __DIR__ . '/../../resources/views' => config('view.paths')[0] . '/vendor/webed-modules-management',

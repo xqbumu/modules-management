@@ -5,7 +5,7 @@ use WebEd\Base\Models\EloquentBase as BaseModel;
 
 class DummyClass extends BaseModel implements DummyClassModelContract
 {
-    protected $table = '{table}';
+    protected $table = 'we_{table}';
 
     protected $primaryKey = 'id';
 
