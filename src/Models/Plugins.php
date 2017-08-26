@@ -5,7 +5,7 @@ use WebEd\Base\Models\EloquentBase as BaseModel;
 
 class Plugins extends BaseModel implements PluginsModelContract
 {
-    protected $table = 'we_plugins';
+    protected $table = 'plugins';
 
     protected $primaryKey = 'id';
 

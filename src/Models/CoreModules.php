@@ -5,7 +5,7 @@ use WebEd\Base\Models\EloquentBase as BaseModel;
 
 class CoreModules extends BaseModel implements CoreModulesModelContract
 {
-    protected $table = 'we_core_modules';
+    protected $table = 'core_modules';
 
     protected $primaryKey = 'id';
 

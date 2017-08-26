@@ -71,17 +71,12 @@ class InstallPluginCommand extends Command
 
     protected function registerInstallModuleService($module)
     {
-        /**
-         * Migrate tables
-         */
-        $this->line('Migrate database...');
-        \Artisan::call('migrate');
         $this->line('Install module dependencies...');
 
         $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\InstallModuleServiceProvider');
         if (class_exists($namespace)) {
+            $this->line('Migrating database...');
             $this->app->register($namespace);
-
         }
         /**
          * Publish assets

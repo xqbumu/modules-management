@@ -1,15 +1,27 @@
 <?php namespace DummyNamespace\Providers;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use WebEd\Base\Events\SessionStarted;
 
 class BootstrapModuleServiceProvider extends ServiceProvider
 {
     /**
-     * Register the application services.
+     * Register any application services.
      *
      * @return void
      */
     public function register()
+    {
+        Event::listen(SessionStarted::class, function () {
+            $this->onSessionStarted();
+        });
+    }
+
+    /**
+     * Register dashboard menus, translations, cms settings
+     */
+    protected function onSessionStarted()
     {
 
     }

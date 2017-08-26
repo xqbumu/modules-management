@@ -21,9 +21,9 @@ if (!function_exists('get_plugin')) {
     function get_plugin($alias = null)
     {
         if ($alias) {
-            return PluginsFacade::findByAlias($alias);
+            return webed_plugins()->findByAlias($alias);
         }
-        return PluginsFacade::getAllPlugins();
+        return webed_plugins()->getAllPlugins();
     }
 }
 
@@ -35,6 +35,6 @@ if (!function_exists('save_plugin_information')) {
      */
     function save_plugin_information($alias, array $data)
     {
-        return PluginsFacade::savePlugin($alias, $data);
+        return webed_plugins()->savePlugin($alias, $data);
     }
 }
