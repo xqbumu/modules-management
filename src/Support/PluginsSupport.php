@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Support;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
 use WebEd\Base\ModulesManagement\Repositories\PluginsRepository;
 use Closure;
@@ -23,9 +24,22 @@ class PluginsSupport
      */
     protected $pluginsInDb;
 
+    /**
+     * @var bool
+     */
+    protected $canAccessDb = false;
+
     public function __construct(PluginsRepositoryContract $pluginsRepository)
     {
         $this->pluginsRepository = $pluginsRepository;
+
+        $this->canAccessDb = $this->checkConnection();
+
+        if ($this->canAccessDb) {
+            if (!$this->pluginsInDb) {
+                $this->pluginsInDb = $this->pluginsRepository->get();
+            }
+        }
     }
 
     /**
@@ -39,13 +53,6 @@ class PluginsSupport
 
         $modulesArr = [];
 
-        $canAccessDB = true;
-        if (app()->runningInConsole()) {
-            if (!check_db_connection() || !\Schema::hasTable('plugins')) {
-                $canAccessDB = false;
-            }
-        }
-
         $modules = get_folders_in_path(webed_plugins_path());
 
         foreach ($modules as $row) {
@@ -55,11 +62,7 @@ class PluginsSupport
                 continue;
             }
 
-            if ($canAccessDB) {
-                if (!$this->pluginsInDb) {
-                    $this->pluginsInDb = $this->pluginsRepository->get();
-                }
-
+            if ($this->canAccessDb) {
                 $plugin = $this->pluginsInDb->where('alias', '=', array_get($data, 'alias'))->first();
 
                 if (!$plugin) {
@@ -176,12 +179,11 @@ class PluginsSupport
 
     /**
      * @param $alias
-     * @param bool $withEvent
      * return mixed
      */
-    public function enableModule($alias, $withEvent = true)
+    public function enableModule($alias)
     {
-        $this->modifyModule($alias, ['enabled' => true], function () use ($alias, $withEvent) {
+        $this->modifyModule($alias, ['enabled' => true], function () use ($alias) {
             do_action(WEBED_PLUGIN_ENABLED, $alias);
         });
 
@@ -276,5 +278,18 @@ class PluginsSupport
         File::put(base_path('composer.json'), json_encode_prettify($composerContent));
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function checkConnection()
+    {
+        if (app()->runningInConsole()) {
+            if (!check_db_connection() || !Schema::hasTable(webed_db_prefix() . 'plugins')) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
+use WebEd\Base\ModulesManagement\Actions\EnablePluginAction;
 
 class EnablePluginCommand extends Command
 {
@@ -10,88 +11,30 @@ class EnablePluginCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'plugin:enable {--all}';
+    protected $signature = 'plugin:enable {alias}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Enable plugins';
+    protected $description = 'Enable plugin';
 
     /**
-     * @var array
+     * @param EnablePluginAction $action
      */
-    protected $container = [];
-
-    /**
-     * @var Composer
-     */
-    protected $composer;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(Composer $composer)
+    public function handle(EnablePluginAction $action)
     {
-        parent::__construct();
+        $result = $action->run($this->argument('alias'));
 
-        $this->composer = $composer;
-        $this->composer->setWorkingPath(base_path());
-    }
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {
-        $this->getInformation();
-
-        $count = 0;
-
-        $plugins = get_plugin();
-
-        if(!$this->container['alias']) {
-            foreach ($plugins as $plugin) {
-                $this->detectRequiredDependencies($plugin);
-                webed_plugins()->enableModule(array_get($plugin, 'alias'));
-                $count++;
-            }
-        } else {
-            $plugins = $plugins->where('alias', '=', $this->container['alias']);
-            foreach ($plugins as $plugin) {
-                $this->detectRequiredDependencies($plugin);
-                webed_plugins()->enableModule(array_get($plugin, 'alias'));
-                $count++;
-            }
-        }
-
-        echo PHP_EOL;
-
-        modules_management()->refreshComposerAutoload();
-
-        $this->info("\n$count module(s) enabled successfully.");
-    }
-
-    protected function getInformation()
-    {
-        if($this->option('all')) {
-            $this->container['alias'] = null;
-        } else {
-            $this->container['alias'] = $this->ask('Plugin alias');
-        }
-    }
-
-    protected function detectRequiredDependencies($module)
-    {
-        $checkRelatedModules = check_module_require($module);
-        if ($checkRelatedModules['error']) {
-            foreach ($checkRelatedModules['messages'] as $message) {
+        if($result['error']) {
+            foreach ($result['messages'] as $message) {
                 $this->error($message);
             }
-            die();
+        } else {
+            foreach ($result['messages'] as $message) {
+                $this->info($message);
+            }
         }
     }
 }

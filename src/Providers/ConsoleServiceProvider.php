@@ -71,6 +71,27 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeMail::class,
             \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeViewComposer::class,
             \WebEd\Base\ModulesManagement\Console\Generators\Plugin\MakeHook::class,
+            /**
+             * Theme
+             */
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeProvider::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeController::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeMiddleware::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeRequest::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeModel::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeRepository::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeFacade::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeService::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeSupport::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeView::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeMigration::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeDataTable::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeCriteria::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeAction::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeMail::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeViewComposer::class,
+            \WebEd\Base\ModulesManagement\Console\Generators\Theme\MakeHook::class,
         ]);
     }
 

@@ -71,7 +71,6 @@ class ExportCoreModuleCommand extends Command
 
         try {
             if (!$this->files->exists(webed_core_path($relativePath))) {
-                //$this->files->deleteDirectory(webed_core_path($relativePath));
                 $this->files->copyDirectory($moduleVendorPath, webed_core_path($relativePath));
             }
 

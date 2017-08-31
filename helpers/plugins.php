@@ -16,7 +16,7 @@ if (!function_exists('webed_plugins')) {
 if (!function_exists('get_plugin')) {
     /**
      * @param string
-     * @return Collection
+     * @return Collection|array
      */
     function get_plugin($alias = null)
     {

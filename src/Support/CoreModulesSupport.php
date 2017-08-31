@@ -239,7 +239,7 @@ class CoreModulesSupport
     protected function checkConnection()
     {
         if (app()->runningInConsole()) {
-            if (!check_db_connection() || !\Schema::hasTable('core_modules')) {
+            if (!check_db_connection() || !\Schema::hasTable(webed_db_prefix() . 'core_modules')) {
                 return false;
             }
         }

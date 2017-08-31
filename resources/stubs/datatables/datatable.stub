@@ -93,7 +93,7 @@ class DummyClass extends AbstractDataTables
             })
             ->addColumn('actions', function ($item) {
                 /*Edit link*/
-                $activeLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 'activated']);
+                $activeLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 1]);
                 $disableLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 'disabled']);
                 $deleteLink = route('admin::your-module.delete.delete', ['id' => $item->id]);
 

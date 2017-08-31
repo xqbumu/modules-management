@@ -23,6 +23,16 @@ class BootstrapModuleServiceProvider extends ServiceProvider
      */
     protected function onSessionStarted()
     {
-
+        /*dashboard_menu()->registerItem([
+            'id' => 'DummyAlias',
+            'priority' => 20,
+            'parent_id' => null,
+            'heading' => null,
+            'title' => 'DummyName',
+            'font_icon' => 'icon-puzzle',
+            'link' => '',
+            'css_class' => null,
+            'permissions' => [],
+        ]);*/
     }
 }

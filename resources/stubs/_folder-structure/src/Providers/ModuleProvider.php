@@ -1,7 +1,5 @@
 <?php namespace DummyNamespace\Providers;
 
-use DummyNamespace\Http\Middleware\BootstrapModuleMiddleware;
-use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
 class ModuleProvider extends ServiceProvider
@@ -35,10 +33,6 @@ class ModuleProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/public' => public_path(),
         ], 'webed-public-assets');
-
-        app()->booted(function () {
-            $this->app->register(BootstrapModuleServiceProvider::class);
-        });
     }
 
     /**
@@ -60,11 +54,6 @@ class ModuleProvider extends ServiceProvider
 
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(RepositoryServiceProvider::class);
-
-        /**
-         * @var Router $router
-         */
-        $router = $this->app['router'];
-        $router->pushMiddlewareToGroup('web', BootstrapModuleMiddleware::class);
+        $this->app->register(BootstrapModuleServiceProvider::class);
     }
 }
