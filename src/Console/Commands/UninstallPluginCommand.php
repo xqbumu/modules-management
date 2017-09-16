@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Commands;
 
 use Illuminate\Console\Command;
+use WebEd\Base\ModulesManagement\Actions\UninstallPluginAction;
 
 class UninstallPluginCommand extends Command
 {
@@ -19,58 +20,20 @@ class UninstallPluginCommand extends Command
     protected $description = 'Uninstall WebEd plugin';
 
     /**
-     * @var array
-     */
-    protected $container = [];
-
-    /**
-     * @var array
-     */
-    protected $dbInfo = [];
-
-    /**
-     * @var \Illuminate\Foundation\Application|mixed
-     */
-    protected $app;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->app = app();
-    }
-
-    /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(UninstallPluginAction $action)
     {
-        /**
-         * Migrate tables
-         */
-        $this->line('Uninstall plugin dependencies...');
-        $this->registerUninstallModuleService();
+        $result = $action->run($this->argument('alias'));
 
-        $this->info("\nPlugin " . $this->argument('alias') . " uninstalled.");
-    }
-
-    protected function registerUninstallModuleService()
-    {
-        $module = get_plugin($this->argument('alias'));
-        $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\UninstallModuleServiceProvider');
-        if(class_exists($namespace)) {
-            $this->app->register($namespace);
+        if($result['error']) {
+            foreach ($result['messages'] as $message) {
+                $this->error($message);
+            }
+        } else {
+            foreach ($result['messages'] as $message) {
+                $this->info($message);
+            }
         }
-        webed_plugins()->savePlugin($module, [
-            'installed' => false,
-            'installed_version' => '',
-        ]);
-        \Artisan::call('cache:clear');
-        $this->line('Uninstalled');
     }
 }

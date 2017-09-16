@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Console\Commands;
 
 use Illuminate\Console\Command;
+use WebEd\Base\ModulesManagement\Actions\UpdatePluginAction;
 
 class UpdatePluginCommand extends Command
 {
@@ -19,71 +20,20 @@ class UpdatePluginCommand extends Command
     protected $description = 'Update WebEd plugin';
 
     /**
-     * @var array
+     * @param UpdatePluginAction $action
      */
-    protected $container = [];
-
-    /**
-     * @var \Illuminate\Foundation\Application|mixed
-     */
-    protected $app;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function handle(UpdatePluginAction $action)
     {
-        parent::__construct();
+        $result = $action->run($this->argument('alias'));
 
-        $this->app = app();
-    }
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {
-        $module = get_plugin($this->argument('alias'));
-
-        if (!$module) {
-            $this->error('Plugin not exists');
-            die();
+        if($result['error']) {
+            foreach ($result['messages'] as $message) {
+                $this->error($message);
+            }
+        } else {
+            foreach ($result['messages'] as $message) {
+                $this->info($message);
+            }
         }
-
-        if (array_get($module, 'version') === array_get($module, 'installed_version')) {
-            $this->info("\nPlugin " . $this->argument('alias') . " already up to date.");
-            return;
-        }
-
-        $this->registerUpdateModuleService($module);
-
-        $this->info("\nPlugin " . $this->argument('alias') . " has been updated.");
-    }
-
-    protected function registerUpdateModuleService($module)
-    {
-        $this->line('Update plugin dependencies...');
-
-        $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\UpdateModuleServiceProvider');
-        if (class_exists($namespace)) {
-            $this->app->register($namespace);
-        }
-
-        webed_plugins()->savePlugin($module, [
-            'installed_version' => array_get($module, 'version'),
-        ]);
-
-        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
-        \Artisan::call('vendor:publish', [
-            '--provider' => $moduleProvider,
-            '--tag' => 'webed-public-assets',
-            '--force' => true
-        ]);
-
-        \Artisan::call('cache:clear');
-
-        $this->line('Your plugin has been updated');
     }
 }

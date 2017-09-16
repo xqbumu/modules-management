@@ -11,7 +11,8 @@ class MakeAction extends AbstractCoreGenerator
      */
     protected $signature = 'core:make:action
     	{alias : The alias of the module}
-    	{name : The class name}';
+    	{name : The class name}
+    	{--type= : Action type}';
 
     /**
      * The type of class being generated.
@@ -27,11 +28,14 @@ class MakeAction extends AbstractCoreGenerator
      */
     protected function getStub()
     {
+        if($this->option('type')) {
+            return __DIR__ . '/../../../../resources/stubs/actions/action-' . $this->option('type') . '.stub';
+        }
         return __DIR__ . '/../../../../resources/stubs/actions/action.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        return 'ServerActions\\' . $this->argument('name') . 'ServerAction';
+        return 'Actions\\' . $this->argument('name') . 'Action';
     }
 }

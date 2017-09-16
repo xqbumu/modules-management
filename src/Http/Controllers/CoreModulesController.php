@@ -1,14 +1,21 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\Controllers;
 
 use WebEd\Base\Http\Controllers\BaseAdminController;
+use WebEd\Base\ModulesManagement\Actions\UpdateCoreModuleAction;
 use WebEd\Base\ModulesManagement\Http\DataTables\CoreModulesListDataTable;
 use Illuminate\Support\Facades\Artisan;
 use Yajra\Datatables\Engines\BaseEngine;
 
 class CoreModulesController extends BaseAdminController
 {
-    protected $module = 'webed-modules-management';
+    /**
+     * @var string
+     */
+    protected $module = WEBED_MODULES_MANAGEMENT;
 
+    /**
+     * @var string
+     */
     protected $dashboardMenuId = 'webed-core-modules';
 
     /**
@@ -25,7 +32,7 @@ class CoreModulesController extends BaseAdminController
 
         $this->dis['dataTable'] = $dataTable->run();
 
-        return do_filter('webed-modules-plugin.index.get', $this)->viewAdmin('core-modules-list');
+        return do_filter(BASE_FILTER_CONTROLLER, $this, WEBED_CORE_MODULES, 'index.get', $dataTable)->viewAdmin('core-modules-list');
     }
 
     /**
@@ -35,21 +42,18 @@ class CoreModulesController extends BaseAdminController
      */
     public function postListing(CoreModulesListDataTable $dataTable)
     {
-        return do_filter('datatables.webed-modules-plugin.index.post', $dataTable, $this);
+        return do_filter(BASE_FILTER_CONTROLLER, $dataTable, WEBED_CORE_MODULES, 'index.post', $this);
     }
 
-    public function postUpdate($alias)
+    /**
+     * @param UpdateCoreModuleAction $action
+     * @param $alias
+     * @return array
+     */
+    public function postUpdate(UpdateCoreModuleAction $action, $alias)
     {
-        $module = get_core_module($alias);
+        $result = $action->run($alias);
 
-        if(!$module) {
-            return response_with_messages(trans($this->module . '::base.core_module_not_exists'), true, \Constants::ERROR_CODE);
-        }
-
-        Artisan::call('core:update', [
-            'alias' => $alias
-        ]);
-
-        return response_with_messages(trans($this->module . '::base.core_module_updated'));
+        return response()->json($result, $result['response_code']);
     }
 }

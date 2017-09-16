@@ -1,8 +1,8 @@
 <?php namespace DummyNamespace;
 
-use WebEd\Base\ServerActions\AbstractServerAction;
+use WebEd\Base\Actions\AbstractAction;
 
-class DummyClass extends AbstractServerAction
+class DummyClass extends AbstractAction
 {
     public function __construct()
     {

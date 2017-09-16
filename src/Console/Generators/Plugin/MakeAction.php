@@ -13,5 +13,6 @@ class MakeAction extends \WebEd\Base\ModulesManagement\Console\Generators\Core\M
      */
     protected $signature = 'plugin:make:action
     	{alias : The alias of the module}
-    	{name : The class name}';
+    	{name : The class name}
+    	{--type= : Action type}';
 }

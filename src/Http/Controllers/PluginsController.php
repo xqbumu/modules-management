@@ -1,14 +1,25 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\Controllers;
 
 use WebEd\Base\Http\Controllers\BaseAdminController;
+use WebEd\Base\ModulesManagement\Actions\DisablePluginAction;
+use WebEd\Base\ModulesManagement\Actions\EnablePluginAction;
+use WebEd\Base\ModulesManagement\Actions\InstallPluginAction;
+use WebEd\Base\ModulesManagement\Actions\UninstallPluginAction;
+use WebEd\Base\ModulesManagement\Actions\UpdatePluginAction;
 use WebEd\Base\ModulesManagement\Http\DataTables\PluginsListDataTable;
 use Illuminate\Support\Facades\Artisan;
 use Yajra\Datatables\Engines\BaseEngine;
 
 class PluginsController extends BaseAdminController
 {
-    protected $module = 'webed-modules-management';
+    /**
+     * @var string
+     */
+    protected $module = WEBED_MODULES_MANAGEMENT;
 
+    /**
+     * @var string
+     */
     protected $dashboardMenuId = 'webed-plugins';
 
     /**
@@ -25,7 +36,7 @@ class PluginsController extends BaseAdminController
 
         $this->dis['dataTable'] = $dataTable->run();
 
-        return do_filter('webed-modules-plugin.index.get', $this)->viewAdmin('plugins-list');
+        return do_filter(BASE_FILTER_CONTROLLER, $this, WEBED_PLUGINS, 'index.get', $dataTable)->viewAdmin('plugins-list');
     }
 
     /**
@@ -35,65 +46,60 @@ class PluginsController extends BaseAdminController
      */
     public function postListing(PluginsListDataTable $dataTable)
     {
-        return do_filter('datatables.webed-modules-plugin.index.post', $dataTable, $this);
+        return do_filter(BASE_FILTER_CONTROLLER, $dataTable, WEBED_PLUGINS, 'index.post', $this);
     }
 
-    public function postChangeStatus($module, $status)
+    /**
+     * @param $alias
+     * @param $status
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postChangeStatus($alias, $status)
     {
         switch ((bool)$status) {
             case true:
-                webed_plugins()->enableModule($module);
-                return modules_management()->refreshComposerAutoload();
+                $result = app(EnablePluginAction::class)->run($alias);
                 break;
             default:
-                webed_plugins()->disableModule($module);
-                return modules_management()->refreshComposerAutoload();
+                $result = app(DisablePluginAction::class)->run($alias);
                 break;
         }
+        return response()->json($result, $result['response_code']);
     }
 
-    public function postInstall($alias)
+    /**
+     * @param InstallPluginAction $action
+     * @param $alias
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postInstall(InstallPluginAction $action, $alias)
     {
-        $module = get_plugin($alias);
+        $result = $action->run($alias);
 
-        if(!$module) {
-            return response_with_messages(trans($this->module . '::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
-        }
-
-        Artisan::call('plugin:install', [
-            'alias' => $alias
-        ]);
-
-        return response_with_messages(trans($this->module . '::base.plugin_installed'));
+        return response()->json($result, $result['response_code']);
     }
 
-    public function postUpdate($alias)
+    /**
+     * @param UpdatePluginAction $action
+     * @param $alias
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postUpdate(UpdatePluginAction $action, $alias)
     {
-        $module = get_plugin($alias);
+        $result = $action->run($alias);
 
-        if(!$module) {
-            return response_with_messages(trans($this->module . '::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
-        }
-
-        Artisan::call('plugin:update', [
-            'alias' => $alias
-        ]);
-
-        return response_with_messages(trans($this->module . '::base.plugin_updated'));
+        return response()->json($result, $result['response_code']);
     }
 
-    public function postUninstall($alias)
+    /**
+     * @param UninstallPluginAction $action
+     * @param $alias
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postUninstall(UninstallPluginAction $action, $alias)
     {
-        $module = get_plugin($alias);
+        $result = $action->run($alias);
 
-        if(!$module) {
-            return response_with_messages(trans($this->module . '::base.plugin_not_exists'), true, \Constants::ERROR_CODE);
-        }
-
-        Artisan::call('plugin:uninstall', [
-            'alias' => $alias
-        ]);
-
-        return response_with_messages(trans($this->module . '::base.plugin_uninstalled'));
+        return response()->json($result, $result['response_code']);
     }
 }

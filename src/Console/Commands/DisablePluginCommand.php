@@ -2,6 +2,7 @@
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
+use WebEd\Base\ModulesManagement\Actions\DisablePluginAction;
 
 class DisablePluginCommand extends Command
 {
@@ -10,74 +11,30 @@ class DisablePluginCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'plugin:disable {--all}';
+    protected $signature = 'plugin:disable {alias}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Disable plugins';
+    protected $description = 'Disable plugin';
 
     /**
-     * @var array
+     * @param DisablePluginAction $action
      */
-    protected $container = [];
-
-
-    /**
-     * @var Composer
-     */
-    protected $composer;
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(Composer $composer)
+    public function handle(DisablePluginAction $action)
     {
-        parent::__construct();
+        $result = $action->run($this->argument('alias'));
 
-        $this->composer = $composer;
-        $this->composer->setWorkingPath(base_path());
-    }
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {
-        $this->getInformation();
-
-        $count = 0;
-
-        $plugins = get_plugin();
-
-        if(!$this->container['alias']) {
-            foreach ($plugins as $plugin) {
-                webed_plugins()->disableModule(array_get($plugin, 'alias'));
-                $count++;
+        if($result['error']) {
+            foreach ($result['messages'] as $message) {
+                $this->error($message);
             }
         } else {
-            $plugins = $plugins->where('alias', '=', $this->container['alias']);
-            foreach ($plugins as $plugin) {
-                webed_plugins()->disableModule(array_get($plugin, 'alias'));
-                $count++;
+            foreach ($result['messages'] as $message) {
+                $this->info($message);
             }
-        }
-
-        modules_management()->refreshComposerAutoload();
-
-        $this->info("\n$count module(s) disabled successfully.");
-    }
-
-    protected function getInformation()
-    {
-        if($this->option('all')) {
-            $this->container['alias'] = null;
-        } else {
-            $this->container['alias'] = $this->ask('Plugin alias');
         }
     }
 }

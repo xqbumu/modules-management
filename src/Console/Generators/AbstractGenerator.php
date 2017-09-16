@@ -19,16 +19,7 @@ abstract class AbstractGenerator extends BaseAbstractGenerator
      * Get root folder of every modules by module type
      * @return string
      */
-    protected function resolveModuleRootFolder()
-    {
-        $path = webed_plugins_path();
-
-        if (!ends_with('/', $path)) {
-            $path .= '/';
-        }
-
-        return $path;
-    }
+    abstract protected function resolveModuleRootFolder();
 
     /**
      * Get module information by key

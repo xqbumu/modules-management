@@ -5,12 +5,10 @@ use File;
 
 class LoadModulesServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array
+     */
     protected $notLoadedModules = [];
-
-    public function register()
-    {
-
-    }
 
     public function boot()
     {
@@ -29,21 +27,19 @@ class LoadModulesServiceProvider extends ServiceProvider
             }
         }
 
-        if(!app()->runningInConsole()) {
-            if ($this->notLoadedModules) {
-                foreach ($this->notLoadedModules as $key => $module) {
-                    /**
-                     * Use hook here
-                     * Show the error messages
-                     */
-                    add_action('flash_messages', function () use ($module) {
-                        echo html()->note(
-                            'The base module of this class is enabled, but class not found: ' . $module . '. Please review and add the namespace of this module to composer autoload section, then run <b>composer dump-autoload</b>',
-                            'error',
-                            false
-                        );
-                    }, $key);
-                }
+        if ($this->notLoadedModules) {
+            foreach ($this->notLoadedModules as $key => $module) {
+                /**
+                 * Use hook here
+                 * Show the error messages
+                 */
+                add_action(BASE_ACTION_FLASH_MESSAGES, function () use ($module) {
+                    echo html()->note(
+                        'The base module of this class is enabled, but class not found: ' . $module . '. Please review and add the namespace of this module to composer autoload section, then run <b>composer dump-autoload</b>',
+                        'error',
+                        false
+                    );
+                }, $key);
             }
         }
     }

@@ -59,7 +59,7 @@ class MakeModule extends Command
      */
     public function handle()
     {
-        $this->moduleType = $this->ask('Your module type. Eccepted: core,plugin. Other types will return "plugins".', 'plugins');
+        $this->moduleType = $this->ask('Your module type. Eccepted: core, plugins. Other types will return "plugins".', 'plugins');
         if (!in_array($this->moduleType, array_keys($this->acceptedTypes))) {
             $this->moduleType = 'plugins';
         }
