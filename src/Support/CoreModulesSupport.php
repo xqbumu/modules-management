@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Collection;
 use WebEd\Base\Models\EloquentBase;
-use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModulesRepositoryContract;
-use WebEd\Base\ModulesManagement\Repositories\CoreModulesRepository;
+use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModuleRepositoryContract;
+use WebEd\Base\ModulesManagement\Repositories\CoreModuleRepository;
 use Illuminate\Support\Facades\File;
 
 class CoreModulesSupport
@@ -14,9 +14,9 @@ class CoreModulesSupport
     protected $modules;
 
     /**
-     * @var CoreModulesRepository
+     * @var CoreModuleRepository
      */
-    protected $coreModulesRepository;
+    protected $coreModuleRepository;
 
     /**
      * @var Collection
@@ -28,15 +28,15 @@ class CoreModulesSupport
      */
     protected $canAccessDb = false;
 
-    public function __construct(CoreModulesRepositoryContract $coreModulesRepository)
+    public function __construct(CoreModuleRepositoryContract $coreModuleRepository)
     {
-        $this->coreModulesRepository = $coreModulesRepository;
+        $this->coreModuleRepository = $coreModuleRepository;
 
         $this->canAccessDb = $this->checkConnection();
 
         if ($this->canAccessDb) {
             if (!$this->modulesInDb) {
-                $this->modulesInDb = $this->coreModulesRepository->get();
+                $this->modulesInDb = $this->coreModuleRepository->get();
             }
         }
     }
@@ -66,13 +66,13 @@ class CoreModulesSupport
                 $plugin = $this->modulesInDb->where('alias', '=', $data['alias'])->first();
 
                 if (!$plugin) {
-                    $result = $this->coreModulesRepository
+                    $result = $this->coreModuleRepository
                         ->create([
                             'alias' => array_get($data, 'alias'),
                         ]);
 
                     if ($result) {
-                        $plugin = $this->coreModulesRepository->find($result);
+                        $plugin = $this->coreModuleRepository->find($result);
                         $this->modulesInDb->push($plugin);
                     }
                 }
@@ -116,19 +116,19 @@ class CoreModulesSupport
                 $plugin = $this->modulesInDb->where('alias', '=', $data['alias'])->first();
 
                 if (!$plugin) {
-                    $plugin = $this->coreModulesRepository->findWhere([
+                    $plugin = $this->coreModuleRepository->findWhere([
                         'alias' => $data['alias']
                     ]);
                 }
 
                 if (!$plugin) {
-                    $result = $this->coreModulesRepository
+                    $result = $this->coreModuleRepository
                         ->create([
                             'alias' => array_get($data, 'alias'),
                         ]);
 
                     if ($result) {
-                        $plugin = $this->coreModulesRepository->find($result);
+                        $plugin = $this->coreModuleRepository->find($result);
                     }
                 }
 
@@ -172,7 +172,7 @@ class CoreModulesSupport
             return false;
         }
 
-        return $this->coreModulesRepository
+        return $this->coreModuleRepository
             ->createOrUpdate(array_get($module, 'id'), array_merge($data, [
                 'alias' => array_get($module, 'alias'),
             ]));

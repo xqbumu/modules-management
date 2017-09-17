@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\ModulesManagement\Repositories\Contracts;
 
-interface PluginsRepositoryContract
+interface PluginRepositoryContract
 {
     /**
      * @param $alias

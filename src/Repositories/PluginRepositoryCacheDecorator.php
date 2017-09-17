@@ -2,9 +2,9 @@
 
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 
-use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
+use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginRepositoryContract;
 
-class PluginsRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements PluginsRepositoryContract
+class PluginRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements PluginRepositoryContract
 {
     /**
      * @param $alias

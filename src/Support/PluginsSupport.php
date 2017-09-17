@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
-use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
-use WebEd\Base\ModulesManagement\Repositories\PluginsRepository;
+use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginRepositoryContract;
+use WebEd\Base\ModulesManagement\Repositories\PluginRepository;
 use Closure;
 use Illuminate\Support\Facades\File;
 
@@ -15,9 +15,9 @@ class PluginsSupport
     protected $plugins;
 
     /**
-     * @var PluginsRepository
+     * @var PluginRepository
      */
-    protected $pluginsRepository;
+    protected $pluginRepository;
 
     /**
      * @var Collection
@@ -29,15 +29,15 @@ class PluginsSupport
      */
     protected $canAccessDb = false;
 
-    public function __construct(PluginsRepositoryContract $pluginsRepository)
+    public function __construct(PluginRepositoryContract $pluginRepository)
     {
-        $this->pluginsRepository = $pluginsRepository;
+        $this->pluginRepository = $pluginRepository;
 
         $this->canAccessDb = $this->checkConnection();
 
         if ($this->canAccessDb) {
             if (!$this->pluginsInDb) {
-                $this->pluginsInDb = $this->pluginsRepository->get();
+                $this->pluginsInDb = $this->pluginRepository->get();
             }
         }
     }
@@ -66,7 +66,7 @@ class PluginsSupport
                 $plugin = $this->pluginsInDb->where('alias', '=', array_get($data, 'alias'))->first();
 
                 if (!$plugin) {
-                    $result = $this->pluginsRepository
+                    $result = $this->pluginRepository
                         ->create([
                             'alias' => array_get($data, 'alias'),
                             'enabled' => false,
@@ -76,7 +76,7 @@ class PluginsSupport
                      * Everything ok
                      */
                     if ($result) {
-                        $plugin = $this->pluginsRepository->find($result);
+                        $plugin = $this->pluginRepository->find($result);
                         $this->pluginsInDb->push($plugin);
                     }
                 }
@@ -124,7 +124,7 @@ class PluginsSupport
             return false;
         }
 
-        return $this->pluginsRepository
+        return $this->pluginRepository
             ->createOrUpdate(array_get($module, 'id'), array_merge($data, [
                 /**
                  * Prevent user edit module alias

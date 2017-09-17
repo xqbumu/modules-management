@@ -1,9 +1,9 @@
 <?php namespace WebEd\Base\ModulesManagement\Repositories;
 
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
-use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginsRepositoryContract;
+use WebEd\Base\ModulesManagement\Repositories\Contracts\PluginRepositoryContract;
 
-class PluginsRepository extends EloquentBaseRepository implements PluginsRepositoryContract
+class PluginRepository extends EloquentBaseRepository implements PluginRepositoryContract
 {
     /**
      * @param $alias

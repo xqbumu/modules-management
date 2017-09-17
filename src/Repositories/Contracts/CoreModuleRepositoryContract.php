@@ -2,7 +2,7 @@
 
 use WebEd\Base\Models\Contracts\BaseModelContract;
 
-interface CoreModulesRepositoryContract
+interface CoreModuleRepositoryContract
 {
     /**
      * @param array $data

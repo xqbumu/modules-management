@@ -1,10 +1,10 @@
 <?php namespace WebEd\Base\ModulesManagement\Repositories;
 
 use WebEd\Base\Models\Contracts\BaseModelContract;
-use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
-use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModulesRepositoryContract;
+use WebEd\Base\ModulesManagement\Repositories\Contracts\CoreModuleRepositoryContract;
+use WebEd\Base\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 
-class CoreModulesRepository extends EloquentBaseRepository implements CoreModulesRepositoryContract
+class CoreModuleRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements CoreModuleRepositoryContract
 {
     /**
      * @param array $data
