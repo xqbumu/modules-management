@@ -1,5 +1,6 @@
 <?php namespace DummyNamespace;
 
+use Illuminate\Support\Facades\DB;
 use WebEd\Base\Actions\AbstractAction;
 
 class DummyClass extends AbstractAction
@@ -22,7 +23,13 @@ class DummyClass extends AbstractAction
     {
         do_action(BASE_ACTION_BEFORE_CREATE, your_screen_name, 'create.post');
 
+        DB::beginTransaction();
+
+        $data['created_by'] = get_current_logged_user_id();
+
         $result = $this->repository->create($data);
+
+        DB::commit();
 
         do_action(BASE_ACTION_AFTER_CREATE, your_screen_name, $result);
 

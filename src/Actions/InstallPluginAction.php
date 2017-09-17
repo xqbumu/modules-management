@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Actions;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use WebEd\Base\Actions\AbstractAction;
 
 class InstallPluginAction extends AbstractAction
@@ -18,6 +19,8 @@ class InstallPluginAction extends AbstractAction
     public function run($alias)
     {
         do_action(WEBED_PLUGIN_BEFORE_INSTALL, $alias);
+
+        DB::beginTransaction();
 
         $module = get_plugin($alias);
 
@@ -45,17 +48,19 @@ class InstallPluginAction extends AbstractAction
 
         $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
 
-        Artisan::call('vendor:publish', [
-            '--provider' => $moduleProvider,
-            '--tag' => 'webed-public-assets',
-            '--force' => true
-        ]);
-
         webed_plugins()
             ->savePlugin($module, [
                 'installed' => true,
                 'installed_version' => array_get($module, 'version'),
             ]);
+
+        DB::commit();
+
+        Artisan::call('vendor:publish', [
+            '--provider' => $moduleProvider,
+            '--tag' => 'webed-public-assets',
+            '--force' => true
+        ]);
 
         Artisan::call('cache:clear');
 

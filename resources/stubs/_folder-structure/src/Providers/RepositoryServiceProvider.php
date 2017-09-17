@@ -4,8 +4,6 @@ use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
-    protected $module = 'DummyNamespace';
-
     /**
      * Register the application services.
      *

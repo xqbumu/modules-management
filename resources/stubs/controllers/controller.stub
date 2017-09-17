@@ -64,7 +64,7 @@ class DummyClass extends BaseAdminController
     protected function groupAction()
     {
         $data = [];
-        if ($this->request->get('customActionType', null) === 'group_action') {
+        if ($this->request->input('customActionType', null) === 'group_action') {
             if (!$this->userRepository->hasPermission($this->loggedInUser, ['your-permission'])) {
                 return [
                     'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
@@ -72,8 +72,8 @@ class DummyClass extends BaseAdminController
                 ];
             }
 
-            $ids = (array)$this->request->get('id', []);
-            $actionValue = $this->request->get('customActionValue');
+            $ids = (array)$this->request->input('id', []);
+            $actionValue = $this->request->input('customActionValue');
 
             switch ($actionValue) {
                 case 'deleted':

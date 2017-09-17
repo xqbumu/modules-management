@@ -1,5 +1,6 @@
 <?php namespace DummyNamespace;
 
+use Illuminate\Support\Facades\DB;
 use WebEd\Base\Actions\AbstractAction;
 
 class DummyClass extends AbstractAction
@@ -22,7 +23,11 @@ class DummyClass extends AbstractAction
     {
         $id = do_filter(BASE_FILTER_BEFORE_RESTORE, $id, your_screen_name);
 
+        DB::beginTransaction();
+
         $result = $this->repository->restore($id);
+
+        DB::commit();
 
         do_action(BASE_ACTION_AFTER_RESTORE, your_screen_name, $id, $result);
 

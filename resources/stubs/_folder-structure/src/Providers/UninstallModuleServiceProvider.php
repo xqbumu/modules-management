@@ -22,6 +22,6 @@ class UninstallModuleServiceProvider extends ServiceProvider
 
     protected function dropSchema()
     {
-        //Schema::dropIfExists('table-name');
+        Schema::dropIfExists('table-name');
     }
 }

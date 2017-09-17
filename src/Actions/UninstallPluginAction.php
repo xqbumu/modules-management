@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Actions;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use WebEd\Base\Actions\AbstractAction;
 
 class UninstallPluginAction extends AbstractAction
@@ -19,6 +20,8 @@ class UninstallPluginAction extends AbstractAction
     {
         do_action(WEBED_PLUGIN_BEFORE_UNINSTALL, $alias);
 
+        DB::beginTransaction();
+
         $module = get_plugin($alias);
 
         if (!$module) {
@@ -36,6 +39,8 @@ class UninstallPluginAction extends AbstractAction
                 'installed' => false,
                 'installed_version' => '',
             ]);
+
+        DB::commit();
 
         Artisan::call('cache:clear');
 

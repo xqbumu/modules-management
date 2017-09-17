@@ -1,5 +1,6 @@
 <?php namespace DummyNamespace;
 
+use Illuminate\Support\Facades\DB;
 use WebEd\Base\Actions\AbstractAction;
 
 class DummyClass extends AbstractAction
@@ -29,7 +30,13 @@ class DummyClass extends AbstractAction
             return $this->error(trans('webed-core::base.form.item_not_exists'));
         }
 
+        DB::beginTransaction();
+
+        $data['updated_by'] = get_current_logged_user_id();
+
         $result = $this->repository->update($item, $data);
+
+        DB::commit();
 
         do_action(BASE_ACTION_AFTER_UPDATE, your_screen_name, $id, $result);
 

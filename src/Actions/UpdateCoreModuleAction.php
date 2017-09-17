@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\ModulesManagement\Actions;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use WebEd\Base\Actions\AbstractAction;
 
 class UpdateCoreModuleAction extends AbstractAction
@@ -23,6 +24,8 @@ class UpdateCoreModuleAction extends AbstractAction
     {
         do_action(WEBED_CORE_BEFORE_UPDATE, $alias);
 
+        DB::beginTransaction();
+
         $module = get_core_module($alias);
 
         if (!$module) {
@@ -44,6 +47,8 @@ class UpdateCoreModuleAction extends AbstractAction
             ]);
 
         $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
+
+        DB::commit();
 
         Artisan::call('vendor:publish', [
             '--provider' => $moduleProvider,

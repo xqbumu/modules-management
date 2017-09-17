@@ -105,6 +105,9 @@ class ConsoleServiceProvider extends ServiceProvider
             \WebEd\Base\ModulesManagement\Console\Commands\EnablePluginCommand::class,
 
             \WebEd\Base\ModulesManagement\Console\Commands\UpdateCoreModuleCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\CoreVendorPublishCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\PluginVendorPublishCommand::class,
+            \WebEd\Base\ModulesManagement\Console\Commands\ThemeVendorPublishCommand::class,
 
             \WebEd\Base\ModulesManagement\Console\Commands\ExportCoreModuleCommand::class,
             \WebEd\Base\ModulesManagement\Console\Commands\GetAllCoreModulesCommand::class,
