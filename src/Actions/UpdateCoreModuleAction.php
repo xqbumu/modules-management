@@ -37,6 +37,7 @@ class UpdateCoreModuleAction extends AbstractAction
         }
 
         $namespace = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\UpdateModuleServiceProvider');
+
         if (class_exists($namespace)) {
             $this->app->register($namespace);
         }
@@ -46,9 +47,9 @@ class UpdateCoreModuleAction extends AbstractAction
                 'installed_version' => isset($module['version']) ? $module['version'] : get_core_module_composer_version(array_get($module, 'repos')),
             ]);
 
-        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
-
         DB::commit();
+
+        $moduleProvider = str_replace('\\\\', '\\', array_get($module, 'namespace', '') . '\Providers\ModuleProvider');
 
         Artisan::call('vendor:publish', [
             '--provider' => $moduleProvider,
@@ -60,6 +61,6 @@ class UpdateCoreModuleAction extends AbstractAction
 
         do_action(WEBED_CORE_UPDATED, $alias);
 
-        return $this->success('Your module has been updated');
+        return $this->success('Module ' . $alias . ' has been updated');
     }
 }
