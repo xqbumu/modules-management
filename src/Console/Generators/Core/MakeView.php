@@ -39,7 +39,7 @@ class MakeView extends AbstractCoreGenerator
      *
      * @return bool|null
      */
-    public function fire()
+    public function handle()
     {
         $nameInput = $this->getNameInput();
 
