@@ -1,0 +1,37 @@
+<?php namespace DummyNamespace;
+
+use WebEd\Base\Actions\AbstractAction;
+
+class DummyClass extends AbstractAction
+{
+    /**
+     * @var YourRepository
+     */
+    protected $repository;
+
+    public function __construct(YourRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function run($id)
+    {
+        $id = do_filter(BASE_FILTER_BEFORE_RESTORE, $id, your_screen_name);
+
+        $result = $this->repository->restore($id);
+
+        do_action(BASE_ACTION_AFTER_RESTORE, your_screen_name, $id, $result);
+
+        if (!$result) {
+            return $this->error();
+        }
+
+        return $this->success(null, [
+            'id' => $result,
+        ]);
+    }
+}

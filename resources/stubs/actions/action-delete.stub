@@ -1,0 +1,38 @@
+<?php namespace DummyNamespace;
+
+use WebEd\Base\Actions\AbstractAction;
+
+class DummyClass extends AbstractAction
+{
+    /**
+     * @var YourRepository
+     */
+    protected $repository;
+
+    public function __construct(YourRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * @param $id
+     * @param bool $force
+     * @return array
+     */
+    public function run($id, $force = false)
+    {
+        $id = do_filter(BASE_FILTER_BEFORE_DELETE, $id, your_screen_name);
+
+        $result = $this->repository->delete($id, $force);
+
+        do_action(BASE_ACTION_AFTER_DELETE, your_screen_name, $id, $result);
+
+        if (!$result) {
+            return $this->error();
+        }
+
+        return $this->success(null, [
+            'id' => $result,
+        ]);
+    }
+}
