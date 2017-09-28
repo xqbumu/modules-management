@@ -1,6 +1,6 @@
 <?php namespace DummyNamespace;
 
-use DummyRootNamespace\Http\Controllers\AbstractController;
+use DummyNamespace\Http\Controllers\AbstractController;
 
 class DummyClass extends AbstractController
 {

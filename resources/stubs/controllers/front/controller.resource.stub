@@ -1,7 +1,7 @@
 <?php namespace DummyNamespace;
 
 use Illuminate\Http\Request;
-use DummyRootNamespace\Http\Controllers\AbstractController;
+use DummyNamespace\Http\Controllers\AbstractController;
 
 class DummyClass extends AbstractController
 {
