@@ -45,8 +45,10 @@ trait ThemeGeneratorTrait
     {
         $stub = str_replace([
             '{alias}',
+            'ThemeRootNamespace',
         ], [
             $this->moduleInformation['alias'],
+            $this->moduleInformation['namespace'],
         ], $stub);
     }
 }
