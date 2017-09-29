@@ -3,8 +3,6 @@
 use WebEd\Base\Http\Controllers\BaseAdminController;
 use WebEd\Base\ModulesManagement\Actions\UpdateCoreModuleAction;
 use WebEd\Base\ModulesManagement\Http\DataTables\CoreModulesListDataTable;
-use Illuminate\Support\Facades\Artisan;
-use Yajra\Datatables\Engines\BaseEngine;
 
 class CoreModulesController extends BaseAdminController
 {
@@ -37,7 +35,7 @@ class CoreModulesController extends BaseAdminController
 
     /**
      * Set data for DataTable plugin
-     * @param CoreModulesListDataTable|BaseEngine $dataTable
+     * @param CoreModulesListDataTable $dataTable
      * @return \Illuminate\Http\JsonResponse
      */
     public function postListing(CoreModulesListDataTable $dataTable)

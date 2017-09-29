@@ -7,8 +7,6 @@ use WebEd\Base\ModulesManagement\Actions\InstallPluginAction;
 use WebEd\Base\ModulesManagement\Actions\UninstallPluginAction;
 use WebEd\Base\ModulesManagement\Actions\UpdatePluginAction;
 use WebEd\Base\ModulesManagement\Http\DataTables\PluginsListDataTable;
-use Illuminate\Support\Facades\Artisan;
-use Yajra\Datatables\Engines\BaseEngine;
 
 class PluginsController extends BaseAdminController
 {
@@ -41,7 +39,7 @@ class PluginsController extends BaseAdminController
 
     /**
      * Set data for DataTable plugin
-     * @param PluginsListDataTable|BaseEngine $dataTable
+     * @param PluginsListDataTable $dataTable
      * @return \Illuminate\Http\JsonResponse
      */
     public function postListing(PluginsListDataTable $dataTable)

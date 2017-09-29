@@ -2,9 +2,9 @@
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
 use WebEd\Base\Models\Contracts\BaseModelContract;
-use Yajra\Datatables\Engines\CollectionEngine;
-use Yajra\Datatables\Engines\EloquentEngine;
-use Yajra\Datatables\Engines\QueryBuilderEngine;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\QueryDataTable;
 
 class DummyClass extends AbstractDataTables
 {
@@ -23,7 +23,10 @@ class DummyClass extends AbstractDataTables
         $this->model = do_filter(FRONT_FILTER_DATA_TABLES_MODEL, YourModel::select(['id', 'title', 'created_at']), $this->screenName);
     }
 
-    public function headings()
+    /**
+     * @return array
+     */
+    public function headings(): array
     {
         return [
             'id' => [
@@ -45,7 +48,10 @@ class DummyClass extends AbstractDataTables
         ];
     }
 
-    public function columns()
+    /**
+     * @return array
+     */
+    public function columns(): array
     {
         return [
             ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
@@ -58,7 +64,7 @@ class DummyClass extends AbstractDataTables
     /**
      * @return string
      */
-    public function run()
+    public function run(): string
     {
         $this->setAjaxUrl('fetch-data-url', 'POST');
 
@@ -79,7 +85,7 @@ class DummyClass extends AbstractDataTables
     }
 
     /**
-     * @return CollectionEngine|EloquentEngine|QueryBuilderEngine|mixed
+     * @return CollectionDataTable|EloquentDataTable|QueryDataTable|mixed
      */
     protected function fetchDataForAjax()
     {
@@ -126,5 +132,64 @@ class DummyClass extends AbstractDataTables
 
                 return $editBtn . $activeBtn . $disableBtn . $deleteBtn;
             });
+    }
+
+    /**
+     * Handle group actions
+     * @return array
+     */
+    protected function groupAction(): array
+    {
+        $request = request();
+
+        $data = [];
+
+        if ($request->input('customActionType', null) === 'group_action') {
+            if (!has_permissions(get_current_logged_user(), ['your-permission-here'])) {
+                return [
+                    'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
+                    'customActionStatus' => 'danger',
+                ];
+            }
+
+            $ids = (array)$request->input('id', []);
+            $actionValue = $request->input('customActionValue');
+
+            switch ($actionValue) {
+                case 'deleted':
+                    if (!has_permissions(get_current_logged_user(), ['delete-field-groups'])) {
+                        return [
+                            'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
+                            'customActionStatus' => 'danger',
+                        ];
+                    }
+
+                    $action = app(YourDeleteAction::class);
+
+                    foreach ($ids as $id) {
+                        $action->run($id);
+                    }
+                    break;
+                case 1:
+                case 0:
+                    $action = app(YourUpdateAction::class);
+
+                    foreach ($ids as $id) {
+                        $action->run($id, [
+                            'status' => $actionValue,
+                        ]);
+                    }
+                    break;
+                default:
+                    return [
+                        'customActionMessage' => trans('webed-core::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
+                        'customActionStatus' => 'danger'
+                    ];
+                    break;
+            }
+            $data['customActionMessage'] = trans('webed-core::base.form.request_completed');
+            $data['customActionStatus'] = 'success';
+        }
+        return $data;
     }
 }

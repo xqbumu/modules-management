@@ -1,9 +1,6 @@
 <?php namespace WebEd\Base\ModulesManagement\Http\DataTables;
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
-use Yajra\Datatables\Engines\CollectionEngine;
-use Yajra\Datatables\Engines\EloquentEngine;
-use Yajra\Datatables\Engines\QueryBuilderEngine;
 
 class PluginsListDataTable extends AbstractDataTables
 {
@@ -17,7 +14,7 @@ class PluginsListDataTable extends AbstractDataTables
     /**
      * @return array
      */
-    public function headings()
+    public function headings(): array
     {
         return [
             'name' => [
@@ -38,7 +35,7 @@ class PluginsListDataTable extends AbstractDataTables
     /**
      * @return array
      */
-    public function columns()
+    public function columns(): array
     {
         return [
             ['data' => 'name', 'name' => 'name', 'searchable' => false, 'orderable' => false],
@@ -50,7 +47,7 @@ class PluginsListDataTable extends AbstractDataTables
     /**
      * @return string
      */
-    public function run()
+    public function run(): string
     {
         $this->setAjaxUrl(route('admin::plugins.index.post'), 'POST');
 
@@ -58,7 +55,7 @@ class PluginsListDataTable extends AbstractDataTables
     }
 
     /**
-     * @return CollectionEngine|EloquentEngine|QueryBuilderEngine|mixed
+     * @return mixed
      */
     protected function fetchDataForAjax()
     {
@@ -131,5 +128,13 @@ class PluginsListDataTable extends AbstractDataTables
 
                 return $activeBtn . $disableBtn . $installBtn . $updateBtn . $uninstallBtn;
             });
+    }
+
+    /**
+     * @return array
+     */
+    protected function groupAction(): array
+    {
+        return [];
     }
 }
