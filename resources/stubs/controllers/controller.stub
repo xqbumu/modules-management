@@ -26,7 +26,7 @@ class DummyClass extends BaseAdminController
         $this->middleware(function (Request $request, $next) {
             $this->getDashboardMenu($this->module);
 
-            $this->breadcrumbs->addLink(trans($this->module . '::base.page_title'), route('admin::your-module.index.get'));
+            $this->breadcrumbs->addLink('{alias}', route('admin::your-module.index.get'));
 
             return $next($request);
         });
@@ -38,7 +38,7 @@ class DummyClass extends BaseAdminController
      */
     public function getIndex(YourDataTables $dataTables)
     {
-        $this->setPageTitle(trans($this->module . '::base.page_title'));
+        $this->setPageTitle('Entity');
 
         $this->dis['dataTable'] = $dataTables->run();
 
@@ -80,10 +80,10 @@ class DummyClass extends BaseAdminController
          * Place your magic here
          */
 
-        $this->setPageTitle(trans('webed-blog::base.posts.form.create_post'));
-        $this->breadcrumbs->addLink(trans('webed-blog::base.posts.form.create_post'));
+        $this->setPageTitle('Create entity');
+        $this->breadcrumbs->addLink('Create entity');
 
-        return do_filter(BASE_FILTER_CONTROLLER, $this, YOUR_SCREEN_NAME, 'create.get')->viewAdmin('posts.create');
+        return do_filter(BASE_FILTER_CONTROLLER, $this, YOUR_SCREEN_NAME, 'create.get')->viewAdmin('create');
     }
 
     /**
@@ -108,10 +108,10 @@ class DummyClass extends BaseAdminController
         }
 
         if ($this->request->has('_continue_edit')) {
-            return redirect()->to(route('admin::blog.posts.edit.get', ['id' => $result['data']['id']]));
+            return redirect()->to(route('admin::your-module.edit.get', ['id' => $result['data']['id']]));
         }
 
-        return redirect()->to(route('admin::blog.posts.index.get'));
+        return redirect()->to(route('admin::your-module.index.get'));
     }
 
     /**
@@ -126,7 +126,7 @@ class DummyClass extends BaseAdminController
 
         if (!$item) {
             flash_messages()
-                ->addMessages(trans('webed-blog::base.item_not_exists'), 'danger')
+                ->addMessages(trans('webed-core::base.form.item_not_exists'), 'danger')
                 ->showMessagesOnSession();
 
             return redirect()->back();
@@ -136,7 +136,7 @@ class DummyClass extends BaseAdminController
          * Place your magic here
          */
 
-        return do_filter(BASE_FILTER_CONTROLLER, $this, YOUR_SCREEN_NAME, 'edit.get', $id)->viewAdmin('posts.edit');
+        return do_filter(BASE_FILTER_CONTROLLER, $this, YOUR_SCREEN_NAME, 'edit.get', $id)->viewAdmin('edit');
     }
 
     /**
@@ -161,7 +161,7 @@ class DummyClass extends BaseAdminController
             return redirect()->back();
         }
 
-        return redirect()->to(route('admin::blog.posts.index.get'));
+        return redirect()->to(route('admin::your-module.index.get'));
     }
 
     /**

@@ -77,8 +77,8 @@ class DummyClass extends AbstractDataTables
         $this->withGroupActions([
             '' => trans('webed-core::datatables.select') . '...',
             'deleted' => trans('webed-core::datatables.delete_these_items'),
-            'activated' => trans('webed-core::datatables.active_these_items'),
-            'disabled' => trans('webed-core::datatables.disable_these_items'),
+            1 => trans('webed-core::datatables.active_these_items'),
+            0 => trans('webed-core::datatables.disable_these_items'),
         ]);
 
         return $this->view();
@@ -95,17 +95,25 @@ class DummyClass extends AbstractDataTables
                 return form()->customCheckbox([['id[]', $item->id]]);
             })
             ->editColumn('status', function ($item) {
-                return html()->label(trans('webed-core::base.status.' . $item->status), $item->status);
+                if ($item->trashed()) {
+                    return html()->label(trans('webed-core::base.status.deleted'), 'deleted');
+                }
+
+                $status = $item->status ? 'activated' : 'disabled';
+
+                $featured = ($item->is_featured) ? '<br><br>' . html()->label('featured', 'purple') : '';
+
+                return html()->label(trans('webed-core::base.status.' . $status), $status) . $featured;
             })
             ->addColumn('actions', function ($item) {
                 /*Edit link*/
                 $activeLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 1]);
-                $disableLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 'disabled']);
+                $disableLink = route('admin::your-module.update-status.post', ['id' => $item->id, 'status' => 0]);
                 $deleteLink = route('admin::your-module.delete.post', ['id' => $item->id]);
 
                 /*Buttons*/
                 $editBtn = link_to(route('admin::your-module.edit.get', ['id' => $item->id]), trans('webed-core::datatables.edit'), ['class' => 'btn btn-sm btn-outline green']);
-                $activeBtn = ($item->status != 'activated') ? form()->button(trans('webed-core::datatables.active'), [
+                $activeBtn = ($item->status != 1) ? form()->button(trans('webed-core::datatables.active'), [
                     'title' => trans('webed-core::datatables.active_this_item'),
                     'data-ajax' => $activeLink,
                     'data-method' => 'POST',
@@ -113,7 +121,7 @@ class DummyClass extends AbstractDataTables
                     'class' => 'btn btn-outline blue btn-sm ajax-link',
                     'type' => 'button',
                 ]) : '';
-                $disableBtn = ($item->status != 'disabled') ? form()->button(trans('webed-core::datatables.disable'), [
+                $disableBtn = ($item->status != 0) ? form()->button(trans('webed-core::datatables.disable'), [
                     'title' => trans('webed-core::datatables.disable_this_item'),
                     'data-ajax' => $disableLink,
                     'data-method' => 'POST',
@@ -145,7 +153,7 @@ class DummyClass extends AbstractDataTables
         $data = [];
 
         if ($request->input('customActionType', null) === 'group_action') {
-            if (!has_permissions(get_current_logged_user(), ['your-permission-here'])) {
+            if (!has_permissions(get_current_logged_user(), ['your-update-permission-here'])) {
                 return [
                     'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
                     'customActionStatus' => 'danger',
@@ -157,7 +165,7 @@ class DummyClass extends AbstractDataTables
 
             switch ($actionValue) {
                 case 'deleted':
-                    if (!has_permissions(get_current_logged_user(), ['delete-field-groups'])) {
+                    if (!has_permissions(get_current_logged_user(), ['your-delete-permission-here'])) {
                         return [
                             'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
                             'customActionStatus' => 'danger',
