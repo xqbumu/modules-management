@@ -95,7 +95,7 @@ class DummyClass extends BaseAdminController
     {
         $data = $this->parseData($request);
 
-        $result = $action->run($data, $request->input('categories', []), $request->input('tags', []));
+        $result = $action->run($data);
 
         $msgType = $result['error'] ? 'danger' : 'success';
 
