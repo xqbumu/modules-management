@@ -14,4 +14,20 @@ class MakeModel extends \WebEd\Base\ModulesManagement\Console\Generators\Core\Ma
     protected $signature = 'theme:make:model
     	{name : The class name}
     	{table : The table name}';
+
+    /**
+     * @param $stub
+     */
+    protected function replaceParameters(&$stub)
+    {
+        $stub = str_replace([
+            '{alias}',
+            'ThemeRootNamespace',
+            '{table}',
+        ], [
+            $this->moduleInformation['alias'],
+            $this->moduleInformation['namespace'],
+            $this->argument('table'),
+        ], $stub);
+    }
 }

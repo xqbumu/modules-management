@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use WebEd\Base\Http\Controllers\BaseAdminController;
 use WebEd\Base\Http\DataTables\AbstractDataTables;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
-use Yajra\Datatables\Engines\BaseEngine;
 
 class DummyClass extends BaseAdminController
 {
@@ -34,7 +33,7 @@ class DummyClass extends BaseAdminController
     }
 
     /**
-     * @param AbstractDataTables|BaseEngine $dataTables
+     * @param AbstractDataTables $dataTables
      * @return @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getIndex(YourDataTables $dataTables)
@@ -47,67 +46,161 @@ class DummyClass extends BaseAdminController
     }
 
     /**
-     * @param AbstractDataTables|BaseEngine $dataTables
+     * @param AbstractDataTables $dataTables
      * @return mixed
      */
     public function postListing(YourDataTables $dataTables)
     {
-        $data = $dataTables->with($this->groupAction());
-
-        return do_filter(BASE_FILTER_CONTROLLER, $data, '{alias}', 'index.post', $this);
+        return do_filter(BASE_FILTER_CONTROLLER, $dataTables, '{alias}', 'index.post', $this);
     }
 
     /**
-     * Handle group actions
-     * @return array
+     * @param YourUpdateEntityAction $action
+     * @param $id
+     * @param $status
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function groupAction()
+    public function postUpdateStatus(YourUpdateEntityAction $action, $id, $status)
     {
-        $data = [];
-        if ($this->request->input('customActionType', null) === 'group_action') {
-            if (!$this->userRepository->hasPermission($this->loggedInUser, ['your-permission'])) {
-                return [
-                    'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
-                    'customActionStatus' => 'danger',
-                ];
-            }
+        $result = $action->run($id, [
+            'status' => $status
+        ]);
 
-            $ids = (array)$this->request->input('id', []);
-            $actionValue = $this->request->input('customActionValue');
+        return response()->json($result, $result['response_code']);
+    }
 
-            switch ($actionValue) {
-                case 'deleted':
-                    if (!$this->userRepository->hasPermission($this->loggedInUser, ['your-permission'])) {
-                        return [
-                            'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
-                            'customActionStatus' => 'danger',
-                        ];
-                    }
-                    /**
-                     * Delete items
-                     */
-                     $ids = do_filter(BASE_FILTER_BEFORE_DELETE, $ids, '{alias}');
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getCreate()
+    {
+        do_action(BASE_ACTION_BEFORE_CREATE, YOUR_SCREEN_NAME, 'create.get');
 
-                     $result = $this->repository->delete($ids);
+        /**
+         * Place your magic here
+         */
 
-                     do_action(BASE_ACTION_AFTER_DELETE, '{alias}', $ids, $result);
-                    break;
-                case 0:
-                case 1:
-                    $result = $this->repository->updateMultiple($ids, [
-                        'status' => $actionValue,
-                    ]);
-                    break;
-                default:
-                    return [
-                        'customActionMessage' => trans('webed-core::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
-                        'customActionStatus' => 'danger'
-                    ];
-                    break;
-            }
-            $data['customActionMessage'] = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
-            $data['customActionStatus'] = !$result ? 'danger' : 'success';
+        $this->setPageTitle(trans('webed-blog::base.posts.form.create_post'));
+        $this->breadcrumbs->addLink(trans('webed-blog::base.posts.form.create_post'));
+
+        return do_filter(BASE_FILTER_CONTROLLER, $this, YOUR_SCREEN_NAME, 'create.get')->viewAdmin('posts.create');
+    }
+
+    /**
+     * @param YourCreateEntityRequest $request
+     * @param YourCreateEntityAction $action
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreate(YourCreateEntityRequest $request, YourCreateEntityAction $action)
+    {
+        $data = $this->parseData($request);
+
+        $result = $action->run($data, $request->input('categories', []), $request->input('tags', []));
+
+        $msgType = $result['error'] ? 'danger' : 'success';
+
+        flash_messages()
+            ->addMessages($result['messages'], $msgType)
+            ->showMessagesOnSession();
+
+        if ($result['error']) {
+            return redirect()->back()->withInput();
         }
+
+        if ($this->request->has('_continue_edit')) {
+            return redirect()->to(route('admin::blog.posts.edit.get', ['id' => $result['data']['id']]));
+        }
+
+        return redirect()->to(route('admin::blog.posts.index.get'));
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function getEdit($id)
+    {
+        $item = $this->repository->find($id);
+
+        $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, YOUR_SCREEN_NAME, 'edit.get');
+
+        if (!$item) {
+            flash_messages()
+                ->addMessages(trans('webed-blog::base.item_not_exists'), 'danger')
+                ->showMessagesOnSession();
+
+            return redirect()->back();
+        }
+
+        /**
+         * Place your magic here
+         */
+
+        return do_filter(BASE_FILTER_CONTROLLER, $this, YOUR_SCREEN_NAME, 'edit.get', $id)->viewAdmin('posts.edit');
+    }
+
+    /**
+     * @param YourUpdateEntityRequest $request
+     * @param YourUpdateEntityAction $action
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEdit(YourUpdateEntityRequest $request, YourUpdateEntityAction $action, $id)
+    {
+        $data = $this->parseData($request);
+
+        $result = $action->run($id, $data);
+
+        $msgType = $result['error'] ? 'danger' : 'success';
+
+        flash_messages()
+            ->addMessages($result['messages'], $msgType)
+            ->showMessagesOnSession();
+
+        if ($result['error'] || $this->request->has('_continue_edit')) {
+            return redirect()->back();
+        }
+
+        return redirect()->to(route('admin::blog.posts.index.get'));
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postDelete(YourDeleteEntityAction $action, $id)
+    {
+        $result = $action->run($id, false);
+
+        return response()->json($result, $result['response_code']);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postForceDelete(YourDeleteEntityAction $action, $id)
+    {
+        $result = $action->run($id, true);
+
+        return response()->json($result, $result['response_code']);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postRestore(YourRestoreEntityAction $action, $id)
+    {
+        $result = $action->run($id);
+
+        return response()->json($result, $result['response_code']);
+    }
+
+    protected function parseData(\WebEd\Base\Http\Requests\Request $request)
+    {
+        $data = $request->input('entity');
+
         return $data;
     }
 }

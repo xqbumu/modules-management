@@ -14,5 +14,6 @@ class MakeController extends \WebEd\Base\ModulesManagement\Console\Generators\Co
     protected $signature = 'plugin:make:controller
     	{alias : The alias of the module}
     	{name : The class name}
+    	{--front : Generate front controller}
     	{--resource : Generate a controller with route resource}';
 }
