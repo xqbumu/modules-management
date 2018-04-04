@@ -31,3 +31,13 @@ if (!function_exists('modules_management')) {
         return \WebEd\Base\ModulesManagement\Facades\ModulesManagementFacade::getFacadeRoot();
     }
 }
+
+if (!function_exists('plugins_support')) {
+    /**
+     * @return \WebEd\Base\ModulesManagement\Support\PluginsSupport
+     */
+    function plugins_support()
+    {
+        return \WebEd\Base\ModulesManagement\Facades\PluginsFacade::getFacadeRoot();
+    }
+}
